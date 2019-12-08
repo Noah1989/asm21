@@ -87,13 +87,13 @@ testcode_end:
 .db 0
 
 debug_align $400
-.include find.z80
+.include find.asm
 
 debug_align $400
-.include print.z80
+.include print.asm
 
 debug_align $400
-.include namelist.z80
+.include namelist.asm
 
 debug_align $1000
 .if ($-code_start)?>=$1000
