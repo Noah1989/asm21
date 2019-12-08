@@ -8,9 +8,10 @@
 
 ; The table starts at one, zero is not a valid bytecode token.
 ; Zero bytes in the source are ignored to allow fragmentation while editing.
-last equ 0
+last := 0
 
 ; This is a small hash table that allows skipping ahead in the list
+debug_align $100
 .align $100; for quick lookup
 quicklist:
 .db 0
@@ -281,18 +282,23 @@ entry XOR_A_iHL,   "", {A_reg, HL_ind}
 entry XOR_A_iri,   "", {A_reg, ri_ind_choice}
 last_instruction equ last
 
+; tokens below do not need a space after the name when printing
+nospace equ last+1
+
 ; TODO what are these?!
 entry origin, "@", {nn_const}
 entry label,  ".", {n_const, text}
 entry define, ":", {n_const, text, expr}
 entry data,   "'", {expr}
 entry newline, "\n", {}
-; All tokens above appear always at the beginning of the line when printing
+
+; All tokens above introduce a new line in the source listing, tokens below do not.
+inlines equ last+1
 
 ; 8-bit registers:
 ; The order is chosen in such a way that the machine code encoding
 ; can be calculated by subtracting 8bit_regs and taking the last three bits.
-8bit_regs equ last+1
+regs_8 equ last+1
 entry B_reg, "B", {} ; 000
 entry C_reg, "C", {} ; 001
 entry D_reg, "D", {} ; 010
@@ -306,7 +312,7 @@ entry R_reg, "R", {} ;(000)
 ; 16-bit registers:
 ; The order is chosen in such a way that the machine code encoding
 ; can be calculated by subtracting 16bit_regs and taking the last two bits.
-16bit_regs equ last+1
+regs_16 equ last+1
 entry BC_reg, "BC",  {} ; 00
 entry DE_reg, "DE",  {} ; 01
 entry HL_reg, "HL",  {} ; 10
@@ -360,7 +366,7 @@ entry math_op1,   "m", {h_const, expr}
 entry math_op2,   "m", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
-entry varible,   "v", {h_const}
+entry varible,    "v", {h_const}
 entry terminator, ";", {}
 
 placeholders equ last+1
@@ -390,8 +396,9 @@ entry d_const,   "d", {} ; displacement, truncate to -128..+127
 entry n_const,   "n", {} ; 8-bit const, truncate to $00..$FF
 entry nn_const, "nn", {} ; 16-bit const, truncate to $0000..$FFFF
 ; these even have variable data length
-entry text,      "'", {} ; even number of data tokens
-entry digits,    "$", {} ; hex number if not specified otherwise
+entry text,       34, {} ; even number of data tokens
+entry digits,    "$", {digits} ; hex number if not specified otherwise
+hex_number equ digits
 
 ; These tokens encode data.
 ; - as part of expressions in the source:

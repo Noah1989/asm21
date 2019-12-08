@@ -17,27 +17,83 @@ fill $76, ((width-($ % width)) % width)
 .macro entrypoint, label
 .if debug
 debug_align $80
-jr label
+label:
+jr label_code
 .db "label"
 fill " ", ((16-($ % 16)) % 16)
 .endif
-label:
+label_code:
 .endm
 
 code_start:
 entrypoint asm21
+.block
+    LD DE, $8000
     LD HL, testcode
 loop:
-    CALL print_source_HL
-.if platform = 2 ; zx spectrum
+    PUSH DE
+    PUSH HL
+    CALL print_source_HL_return_count_C
+    LD A, 16
+    SUB C
     LD B, A
-    LD A, $0D ; return
+    LD A, $10
     RST $10
-    LD A, B
-.endif
+    LD A, 6
+    RST $10
+spaces:
+    LD A, "_"
+    RST $10
+    DJNZ spaces
+    LD A, $10
+    RST $10
+    LD A, 0
+    RST $10
+    POP HL
+    POP DE
+    CALL assemble_source_HL_output_DE_return_count_C
+    XOR A
+    OR  C
+    JR Z, next
+    LD B, 0
+    EX DE, HL
+    SBC HL, BC
+    EX DE, HL
+    LD B, C
+    JR print_result
+print_result_loop:
+    LD A, " "
+    RST $10
+print_result:
+    LD A, (DE)
+    INC DE
+    CALL print_byte_A
+    DJNZ print_result_loop
+
+next:
+    LD A, $0D ; newline
+    RST $10
     LD A, (HL)
     AND A
     JR NZ, loop
+    RET
+.endblock
+
+print_byte_A:
+    PUSH AF
+    RRA
+    RRA
+    RRA
+    RRA
+    CALL print_nibble_A
+    POP AF
+print_nibble_A:
+    AND $0F
+    ADD A, $90
+    DAA
+    ADC A, $40
+    DAA
+    RST $10
     RET
 
 debug_align $100
@@ -46,8 +102,8 @@ debug_align $100
 .db (char+0) % 16 + dat_0
 .endm
 testcode:
-.db ld_r_n, h_reg, dec_number, dat_1, dat_7
-.db ld_r_n, e_reg, dec_number, dat_2, dat_3
+.db ld_r_n, h_reg, hex_number, dat_1, dat_7
+.db ld_r_n, e_reg, bin_number, dat_1, dat_1, dat_0, dat_1
 .db call_nn, reference, dat_0
 .db ld_r_r, b_reg, h_reg
 .db ld_r_r, c_reg, l_reg
@@ -86,16 +142,12 @@ encode "d"
 testcode_end:
 .db 0
 
-debug_align $400
 .include find.asm
-
-debug_align $400
 .include print.asm
-
-debug_align $400
 .include namelist.asm
+.include assemble.asm
 
 debug_align $1000
-.if ($-code_start)?>=$1000
+.if ($-code_start)?>$1000
 .error size target exceeded
 .endif

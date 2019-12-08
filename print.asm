@@ -1,6 +1,15 @@
 color_io equ $B9 ; GPU color table
 chars_io equ $BC ; GPU name table with auto increment
 
+.macro print_byte_A
+.if platform = 1 ; micro21
+    OUT (chars_io), A
+.endif
+.if platform = 2 ; zx spectrum
+    RST $10
+.endif
+.endm
+
 ; Finds and prints the name of the bytecode token in A.
 ; Returns number of characters printed in C
 ;         parameter count in B
@@ -58,31 +67,16 @@ entrypoint print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
     JR Z, done
     ; separator
     LD A, " "
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+    print_byte_A
     INC C
     JR first
 loop:
         ; print comma and space
         LD A, ","
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+        print_byte_A
         INC C
         LD A, " "
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+        print_byte_A
         INC C
 first:
         ; print parameter name
@@ -104,7 +98,9 @@ done:
     RET
 .endblock
 
-entrypoint print_source_HL
+; Prints a piece of source from the address pointed to by HL.
+; HL will be moved forward for every token consumed.
+entrypoint print_source_HL_return_count_C
 .block
 retry:
     LD A, (HL)
@@ -116,36 +112,24 @@ retry:
     POP DE ; source pointer
     EX DE, HL ; result: DE = *params, HL = *source
     ; check if no params
-    XOR A
-    OR B
-    JR Z, done
+    INC B
+    DJNZ hasparams
+    RET
+hasparams:
+    CP nospace
+    JR NC, first
     ; separator
     LD A, " "
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+    print_byte_A
     INC C
     JR first
 loop:
         ; print comma and space
         LD A, ","
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+        print_byte_A
         INC C
         LD A, " "
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+        print_byte_A
         INC C
 first:
         ; process parameter
@@ -166,8 +150,10 @@ switch_1:
             PUSH DE ; return address
             CP text
             JP Z, print_text_HL
+            CP digits
+            JP Z, print_digits_HL
             ; generic placeholder, print single token from source
-            JR print_source_HL
+            JR print_source_HL_return_count_C
 switch_break:
         ; tally the number of characters printed
         LD A, C
@@ -184,6 +170,7 @@ done:
 
 entrypoint print_text_HL
 .block
+        LD C, 0
 loop:
         LD A, (HL)
         SUB dat_0
@@ -199,16 +186,29 @@ loop:
         JR C, halfbyte
         INC HL
         ADD A, B
-.if platform = 1 ; micro21
-        OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-        RST $10
-.endif
+        print_byte_A
+        INC C
         JR loop
 halfbyte:
         DEC HL
         RET
+.endblock
+
+entrypoint print_digits_HL
+.block
+        LD C, 0
+loop:
+        LD A, (HL)
+        SUB dat_0
+        RET C
+        INC HL
+        ADD A, $90
+        DAA
+        ADC A, $40
+        DAA
+        print_byte_A
+        INC C
+        JR loop
 .endblock
 
 ; Sets the color of the next character to be printed according to the
