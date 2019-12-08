@@ -1,0 +1,17 @@
+asm21 - a small (4k) native assembler for Z80-based machines
+
+- is less than 4k in size
+- uses a bytecode source format to save space
+- runs on the Z80 CPU itself
+- emits code for the Z80 CPU
+- should be easily ported to any Z80-based machine
+
+So why would you need this? This is part of the Micro21 project,
+a microcomputer that comes with all the tools required to make
+such a computer itself, without the help of another machine.
+
+Due to the small size (only 4k, hopefully) this little assembler
+could be useful on other machines as well. For example you might
+want to try it on a Sinclair ZX Spectrum or port it to CP/M.
+
+You need https://github.com/maly/asm80-node to build this.
