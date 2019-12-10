@@ -225,7 +225,7 @@ entrypoint print_color_A
     LD A, $10 ; INK
     RST $10
     ;TODO: actually choose different colors
-    LD A, 2
+    LD A, 1
     RST $10
 .endif
     POP AF

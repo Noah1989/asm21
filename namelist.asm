@@ -280,16 +280,18 @@ entry XOR_A_n,  "XOR", {A_reg, n_const}
 entry XOR_A_r,     "", {A_reg, r_choice}
 entry XOR_A_iHL,   "", {A_reg, HL_ind}
 entry XOR_A_iri,   "", {A_reg, ri_ind_choice}
-last_instruction equ last
 
 ; tokens below do not need a space after the name when printing
 nospace equ last+1
 
-; TODO what are these?!
+; pseudo-instructions
 entry origin, "@", {nn_const}
 entry label,  ".", {n_const, text}
 entry define, ":", {n_const, text, expr}
 entry data,   "'", {expr}
+last_instruction equ last
+
+
 entry newline, "\n", {}
 
 ; All tokens above introduce a new line in the source listing, tokens below do not.

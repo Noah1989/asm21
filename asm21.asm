@@ -1,7 +1,7 @@
 .org $9000
 
 debug equ 1
-color equ 0
+color equ 1
 platform equ 2 ; 1 = micro21, 2 = zx spectrum
 
 ; Aligning the code makes debugging easier.
@@ -15,9 +15,9 @@ fill $76, ((width-($ % width)) % width)
 ; This leaves unreachable string marks all over the code.
 ; A stack trace can be constructed by looking at the hidden text.
 .macro entrypoint, label
-.if debug
-debug_align $80
+debug_align $40
 label:
+.if debug
 jr label_code
 .db "label"
 fill " ", ((16-($ % 16)) % 16)
@@ -96,7 +96,7 @@ print_nibble_A:
     RST $10
     RET
 
-debug_align $100
+debug_align $40
 .macro encode, char
 .db (char+0) / 16 + dat_0
 .db (char+0) % 16 + dat_0
