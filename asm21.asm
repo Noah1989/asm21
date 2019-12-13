@@ -15,7 +15,7 @@ fill $76, ((width-($ % width)) % width)
 ; This leaves unreachable string marks all over the code.
 ; A stack trace can be constructed by looking at the hidden text.
 .macro entrypoint, label
-debug_align $40
+debug_align $10
 label:
 .if debug
 jr label_code
