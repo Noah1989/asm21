@@ -1,15 +1,6 @@
 color_io equ $B9 ; GPU color table
 chars_io equ $BC ; GPU name table with auto increment
 
-.macro print_byte_A
-.if platform = 1 ; micro21
-    OUT (chars_io), A
-.endif
-.if platform = 2 ; zx spectrum
-    RST $10
-.endif
-.endm
-
 ; Finds and prints the name of the bytecode token in A.
 ; Returns number of characters printed in C
 ;         parameter count in B
@@ -21,29 +12,11 @@ entrypoint print_name_A_ret_len_C_params_B_HL_trash_DE
     PUSH BC
     EX DE, HL ; result: HL *name, DE *params
     LD B, C ; name length
-.if platform = 1 ; micro21
     LD C, chars_io
-.endif
-.if platform = 2 ; zx spectrum
-    LD C, A
-.endif
 loop:
-.if color
         CALL print_color_A
-.endif
-.if platform = 1 ; micro21
         OUTI ; (C) <= (HL); DEC B; INC HL
         JR NZ, loop
-.endif
-.if platform = 2 ; zx spectrum
-        LD A, (HL)
-        RST $10
-        INC HL
-        DJNZ loop
-.endif
-.if platform = 2 ; zx spectrum
-    LD A, C
-.endif
     EX DE, HL ; result: HL *params, DE trash
     POP BC
     RET
@@ -67,16 +40,16 @@ entrypoint print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
     JR Z, done
     ; separator
     LD A, " "
-    print_byte_A
+    OUT (chars_io), A
     INC C
     JR first
 loop:
         ; print comma and space
         LD A, ","
-        print_byte_A
+        OUT (chars_io), A
         INC C
         LD A, " "
-        print_byte_A
+        OUT (chars_io), A
         INC C
 first:
         ; print parameter name
@@ -120,16 +93,16 @@ hasparams:
     JR NC, first
     ; separator
     LD A, " "
-    print_byte_A
+    OUT (chars_io), A
     INC C
     JR first
 loop:
         ; print comma and space
         LD A, ","
-        print_byte_A
+        OUT (chars_io), A
         INC C
         LD A, " "
-        print_byte_A
+        OUT (chars_io), A
         INC C
 first:
         ; process parameter
@@ -186,7 +159,7 @@ loop:
         JR C, halfbyte
         INC HL
         ADD A, B
-        print_byte_A
+        out (chars_io), A
         INC C
         JR loop
 halfbyte:
@@ -206,7 +179,7 @@ loop:
         DAA
         ADC A, $40
         DAA
-        print_byte_A
+        OUT (chars_io), A
         INC C
         JR loop
 .endblock
@@ -216,18 +189,9 @@ loop:
 entrypoint print_color_A
 .block
     PUSH AF
-.if platform = 1 ; micro21
     ;TODO: actually choose different colors
     LD A, $0A
     OUT (color_io), A
-.endif
-.if platform = 2 ; zx spectrum
-    LD A, $10 ; INK
-    RST $10
-    ;TODO: actually choose different colors
-    LD A, 1
-    RST $10
-.endif
     POP AF
     RET
 .endblock

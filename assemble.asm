@@ -1,7 +1,7 @@
 last := 0
 .macro asmstr, instr, strat, arg
 .if instr?<=last
-    .error wrong order for instr
+.error wrong order for instr
 .endif
 org stable + instr
 .db strat
@@ -54,6 +54,13 @@ asmstr DEC_iri,       ir_op_d, $35
 asmstr DEC_rr,           rreg, $0B
 asmstr DEC_ri,          ir_op, $2B
 asmstr DI_,            opcode, $F3
+asmstr DJNZ_,            op_d, $10
+asmstr EI_,            opcode, $FB
+asmstr EX_AF,          opcode, $08
+asmstr EX_DE_HL,       opcode, $EB
+asmstr EX_iSP_HL,      opcode, $E3
+asmstr EX_iSP_ri,       ir_op, $E3
+
 asmstr LD_r_n,         hreg_n, $06
 asmstr LD_r_r,      hreg_lreg, $40
 asmstr RET_,           opcode, $C9
@@ -73,6 +80,7 @@ last := strat
 
 .org jtable
 jentry opcode      ; just an opcode
+jentry op_d        ; opcode followed by offset
 jentry op_n        ; opcode followed by 1-byte constant
 jentry op_nn       ; opcode followed by 2-byte constant
 jentry hreg        ; hihg register encoding (bits 3-5)
@@ -159,6 +167,16 @@ entrypoint opcode_handler
     LD (DE), A
     INC DE
     LD C, 1
+    RET
+.endblock
+
+entrypoint op_d_handler
+.block
+    LD (DE), A
+    INC DE
+    CALL eval_expression_HL_write_DE
+    DEC DE ; TODO: calculate offset
+    LD C, 2
     RET
 .endblock
 
