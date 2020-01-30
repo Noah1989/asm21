@@ -73,7 +73,7 @@ done:
 
 ; Prints a piece of source from the address pointed to by HL.
 ; HL will be moved forward for every token consumed.
-entrypoint print_source_HL_return_count_C
+entrypoint print_source_HL_return_count_C_trash_DE
 .block
 retry:
     LD A, (HL)
@@ -126,7 +126,7 @@ switch_1:
             CP digits
             JP Z, print_digits_HL
             ; generic placeholder, print single token from source
-            JR print_source_HL_return_count_C
+            JR print_source_HL_return_count_C_trash_DE
 switch_break:
         ; tally the number of characters printed
         LD A, C

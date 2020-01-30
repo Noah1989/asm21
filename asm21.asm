@@ -1,3 +1,8 @@
+.include rom.inc
+
+gaddr_l .equ $B3
+gaddr_h .equ $B4
+
 .org $8000
 fill $76, $1000
 
@@ -29,18 +34,30 @@ label_code:
 code_start:
 entrypoint asm21
 .block
-    LD DE, $8000
-    LD HL, source_buffer
-loop:
-    CALL assemble_source_HL_output_DE_return_count_C
+    CALL ROM_CLEAR_SCREEN
     XOR A
-    CP C
-    JR Z, noskip
-    INC HL
-noskip:
+    LD E, 4
+    LD D, 3
+    LD HL, source_buffer
+next_line:
+    LD A, E
+    OUT gaddr_l, A
+    LD A, D
+    OUT gaddr_h, A
+next_token:
+    PUSH DE
+    CALL print_source_HL_return_count_C_trash_DE
+    POP DE
     LD A, (HL)
+    CP inlines
+    JR NC, next_token
+    INC D
     AND A
-    JR NZ, loop
+    JR NZ, next_line
+wait:
+    CALL ROM_GET_KEY
+    JR Z, wait
+    CALL ROM_CLEAR_SCREEN
     RET
 .endblock
 
