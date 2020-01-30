@@ -113,4 +113,9 @@ encode "d"
 encode "d"
 .db djnz_, reference, dat_1
 .db ret_
+.db comment
+encode "t"
+encode "e"
+encode "s"
+encode "t"
 .db 0

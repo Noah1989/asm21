@@ -287,14 +287,14 @@ last_instruction equ last
 nospace equ last+1
 
 ; pseudo-instructions
+pseudo_instructions equ last+1
 entry origin, "@", {nn_const}
 entry label,  ".", {n_const, text}
 entry define, ":", {n_const, text, expr}
-entry data,   "'", {expr}
-last_pseudo_instruction equ last
-
-
-entry newline, "\n", {}
+entry data, "'", {expr}
+entry comment, "!", {text}
+entry unused1, "?", {}
+entry unused2, "", {}
 
 ; All tokens above introduce a new line in the source listing, tokens below do not.
 inlines equ last+1
@@ -348,8 +348,6 @@ entry p28, "$28", {}
 entry p30, "$30", {}
 entry p38, "$38", {}
 
-last_data equ last
-
 ; Flags for jump conditions
 flags equ last+1
 entry NZ_flag, "NZ", {} ; 000 / 00
@@ -361,20 +359,14 @@ entry PE_flag, "PE", {} ; 101
 entry  P_flag,  "P", {} ; 110
 entry  M_flag,  "M", {} ; 111
 
-last_flag equ last
-
-; TODO what are these?!
-entry reference, "*", {n_const}
-; ---
-entry comment,  "!", {text}
-entry indent,   " ", {h_const}
-
 ; Expression primitives:
+expression_primitives equ last+1
 entry math_op1,   "m", {h_const, expr}
-entry math_op2,   "m", {h_const, expr, expr}
+entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
-entry varible,    "v", {h_const}
+entry reference,  "*", {n_const} ; resolve label
+entry varible,    "v", {h_const} ; resolve define
 entry terminator, ";", {}
 
 placeholders equ last+1

@@ -149,7 +149,7 @@ entrypoint print_text_HL
 .block
         LD C, 0
 loop:
-        LD A, $08
+        LD A, $07
         OUT (color_io), A
         LD A, (HL)
         SUB dat_0
@@ -213,10 +213,10 @@ loop:
     POP AF
     RET
 table:
-    .db dat_0
-    .db last_flag
-    .db last_data
-    .db last_pseudo_instruction
-    .db last_instruction
+    .db dat_nibbles
+    .db expression_primitives
+    .db flags
+    .db regs_8
+    .db pseudo_instructions
     .db 0
 .endblock
