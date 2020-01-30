@@ -288,7 +288,7 @@ entrypoint hreg_lreg_handler
     RET
 .endblock
 
-entrypoint lreg_handler 
+entrypoint lreg_handler
 .block
     LD C, A
     LD A, (HL)

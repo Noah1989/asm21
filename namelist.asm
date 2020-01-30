@@ -3,7 +3,7 @@
 ; This list consists of entries that describe each possible bytecode token.
 ; These descriptions are used by the interactive source editor
 ; for printing and editing the source in a human-readable way.
-; Not all bytecode tokens are valid source, some of them are placeholders 
+; Not all bytecode tokens are valid source, some of them are placeholders
 ; for a choice among multiple possible tokens or an expression.
 
 ; The table starts at one, zero is not a valid bytecode token.
@@ -32,23 +32,23 @@ namelist:
 ; A name length of zero implies the same name as the previous entry.
 ; Note that parameterless entries are just pascal-style strings.
 
-; The interpretation of a parameter depends on the type of the described token 
+; The interpretation of a parameter depends on the type of the described token
 ; as well as the type of the token referred to in the parameter.
 ; The token type can be derived from the token byte
 ; since all tokens are sorted by type:
 
 ; # Fixed tokens: fully specified by recursively traversing the parameter lists
-; +-- Instructions: 
+; +-- Instructions:
 ; |     Parameter list contains instruction operands.
 ; |     Operands can be registers, indirect memory, flags, RST addresses
 ; |     as well as placeholders
-; +-- Registers: 
+; +-- Registers:
 ; |     No parameters
 ; +-- Indirect memory:
 ; |     Parameter specifies expression type if required.
-; +-- Flags: 
+; +-- Flags:
 ; |     No parameters.
-; '-- RST addresses: 
+; '-- RST addresses:
 ;       No parameters.
 
 ; # Placeholder tokens: require tokens to be consumed from source to specify
@@ -58,7 +58,7 @@ namelist:
 ; '-- Expression placeholders
 ;       Fully specified using a variable length expression from source.
 ;       There are different expression placeholders depending on the
-;       width and signedness of the required value.     
+;       width and signedness of the required value.
 ;       No parameters.
 ;
 ; TODO: Lables, Comments, Indents...
@@ -113,7 +113,7 @@ last := token
 ; Instructions:
 ; There is one token for each variant of each instruction.
 ; This syntax is more verbose than the official mnemonics.
-; Operands are always specified, 
+; Operands are always specified,
 ; even if they are technically implied by the instruction itself.
 instructions equ last+1
 entry ADC_A_n,  "ADC", {A_reg, n_const}
@@ -136,7 +136,7 @@ entry BIT_b_r,  "BIT", {b_const, r_choice}
 entry BIT_b_iHL,   "", {b_const, HL_ind}
 entry BIT_b_iri,   "", {b_const, ri_ind_choice}
 entry CALL_nn, "CALL", {nn_const}
-entry CALL_cc_nn,  "", {cc_choice, nn_const} 
+entry CALL_cc_nn,  "", {cc_choice, nn_const}
 entry CCF_,     "CCF", {}
 entry CP_A_n,    "CP", {A_reg, n_const}
 entry CP_A_r,      "", {A_reg, r_choice}
@@ -281,6 +281,8 @@ entry XOR_A_r,     "", {A_reg, r_choice}
 entry XOR_A_iHL,   "", {A_reg, HL_ind}
 entry XOR_A_iri,   "", {A_reg, ri_ind_choice}
 
+last_instruction equ last
+
 ; tokens below do not need a space after the name when printing
 nospace equ last+1
 
@@ -289,7 +291,7 @@ entry origin, "@", {nn_const}
 entry label,  ".", {n_const, text}
 entry define, ":", {n_const, text, expr}
 entry data,   "'", {expr}
-last_instruction equ last
+last_pseudo_instruction equ last
 
 
 entry newline, "\n", {}
@@ -336,6 +338,18 @@ entry IX_ind, "(IX+d)", {d_const}
 entry IY_ind, "(IY+d)", {d_const}
 entry nn_ind, "(nn)", {nn_const}
 
+; RST program addresses
+entry p00, "$00", {}
+entry p08, "$08", {}
+entry p10, "$10", {}
+entry p18, "$18", {}
+entry p20, "$20", {}
+entry p28, "$28", {}
+entry p30, "$30", {}
+entry p38, "$38", {}
+
+last_data equ last
+
 ; Flags for jump conditions
 flags equ last+1
 entry NZ_flag, "NZ", {} ; 000 / 00
@@ -347,15 +361,7 @@ entry PE_flag, "PE", {} ; 101
 entry  P_flag,  "P", {} ; 110
 entry  M_flag,  "M", {} ; 111
 
-; RST program addresses
-entry p00, "$00", {}
-entry p08, "$08", {}
-entry p10, "$10", {}
-entry p18, "$18", {}
-entry p20, "$20", {}
-entry p28, "$28", {}
-entry p30, "$30", {}
-entry p38, "$38", {}
+last_flag equ last
 
 ; TODO what are these?!
 entry reference, "*", {n_const}

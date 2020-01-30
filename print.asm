@@ -45,6 +45,8 @@ entrypoint print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
     JR first
 loop:
         ; print comma and space
+        LD A, $08
+        OUT (color_io), A
         LD A, ","
         OUT (chars_io), A
         INC C
@@ -98,6 +100,8 @@ hasparams:
     JR first
 loop:
         ; print comma and space
+        LD A, $08
+        OUT (color_io), A
         LD A, ","
         OUT (chars_io), A
         INC C
@@ -145,6 +149,8 @@ entrypoint print_text_HL
 .block
         LD C, 0
 loop:
+        LD A, $08
+        OUT (color_io), A
         LD A, (HL)
         SUB dat_0
         RET C
@@ -159,7 +165,7 @@ loop:
         JR C, halfbyte
         INC HL
         ADD A, B
-        out (chars_io), A
+        OUT (chars_io), A
         INC C
         JR loop
 halfbyte:
@@ -171,6 +177,8 @@ entrypoint print_digits_HL
 .block
         LD C, 0
 loop:
+        LD A, $09
+        OUT (color_io), A
         LD A, (HL)
         SUB dat_0
         RET C
@@ -189,9 +197,26 @@ loop:
 entrypoint print_color_A
 .block
     PUSH AF
-    ;TODO: actually choose different colors
-    LD A, $0A
+    PUSH BC
+    PUSH HL
+    LD HL, table
+    LD B, $10
+loop:
+    DEC B
+    CP (HL)
+    INC HL
+    JR C, loop
+    LD A, B
     OUT (color_io), A
+    POP HL
+    POP BC
     POP AF
     RET
+table:
+    .db dat_0
+    .db last_flag
+    .db last_data
+    .db last_pseudo_instruction
+    .db last_instruction
+    .db 0
 .endblock
