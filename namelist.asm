@@ -366,7 +366,7 @@ entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
 entry reference,  "*", {n_const} ; resolve label
-entry varible,    "=", {h_const} ; resolve define
+entry varible,    "=", {n_const} ; resolve define
 entry terminator, ";", {}
 
 placeholders equ last+1
