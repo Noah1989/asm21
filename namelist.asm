@@ -293,8 +293,8 @@ entry label,  ".", {n_const, text}
 entry define, ":", {n_const, text, expr}
 entry data, "'", {expr}
 entry comment, "!", {text}
-entry unused1, "?", {}
-entry unused2, "", {}
+entry undefined, "?", {}
+entry unused, "", {}
 
 ; All tokens above introduce a new line in the source listing, tokens below do not.
 inlines equ last+1
@@ -366,7 +366,7 @@ entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
 entry reference,  "*", {n_const} ; resolve label
-entry varible,    "v", {h_const} ; resolve define
+entry varible,    "=", {h_const} ; resolve define
 entry terminator, ";", {}
 
 placeholders equ last+1
