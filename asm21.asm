@@ -35,7 +35,32 @@ code_start:
 entrypoint asm21
 .block
     CALL ROM_CLEAR_SCREEN
-    XOR A
+    LD E, 4
+    LD D, 0
+    LD B, instr_l
+next_line:
+    LD A, E
+    OUT gaddr_l, A
+    LD A, D
+    OUT gaddr_h, A
+    INC D
+    LD A, B
+    PUSH DE
+    CALL print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
+    POP DE
+    INC A
+    LD B, A
+    CP instr_n
+    JR C, next_line
+wait:
+    CALL ROM_GET_KEY
+    JR Z, wait
+    CALL ROM_CLEAR_SCREEN
+    RET
+.endblock
+
+entrypoint test_print
+.block
     LD E, 4
     LD D, 3
     LD HL, source_buffer
@@ -54,10 +79,6 @@ next_token:
     INC D
     AND A
     JR NZ, next_line
-wait:
-    CALL ROM_GET_KEY
-    JR Z, wait
-    CALL ROM_CLEAR_SCREEN
     RET
 .endblock
 
