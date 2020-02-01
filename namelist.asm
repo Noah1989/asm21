@@ -116,81 +116,8 @@ last := token
 ; Operands are always specified,
 ; even if they are technically implied by the instruction itself.
 instructions equ last+1
-instr_a equ last+1
-entry ADC_A_n,  "ADC", {A_reg, n_const}
-entry ADC_A_r,     "", {A_reg, r_choice}
-entry ADC_A_iHL,   "", {A_reg, HL_ind}
-entry ADC_A_iri,   "", {A_reg, ri_ind_choice}
-entry ADC_HL_rr,   "", {HL_reg, rr_choice}
-entry ADD_A_n,  "ADD", {A_reg, n_const}
-entry ADD_A_r,     "", {A_reg, r_choice}
-entry ADD_A_iHL,   "", {A_reg, HL_ind}
-entry ADD_A_iri,   "", {A_reg, ri_ind_choice}
-entry ADD_HL_rr,   "", {HL_reg, rr_choice}
-entry ADD_IX_rx,   "", {IX_reg, rx_choice}
-entry ADD_IY_ry,   "", {IY_reg, ry_choice}
-entry AND_A_n,  "AND", {A_reg, n_const}
-entry AND_A_r,     "", {A_reg, r_choice}
-entry AND_A_iHL,   "", {A_reg, HL_ind}
-entry AND_A_iri,   "", {A_reg, ri_ind_choice}
-instr_b equ last+1
-entry BIT_b_r,  "BIT", {b_const, r_choice}
-entry BIT_b_iHL,   "", {b_const, HL_ind}
-entry BIT_b_iri,   "", {b_const, ri_ind_choice}
-instr_c equ last+1
-entry CALL_nn, "CALL", {nn_const}
-entry CALL_cc_nn,  "", {cc_choice, nn_const}
-entry CCF_,     "CCF", {}
-entry CP_A_n,    "CP", {A_reg, n_const}
-entry CP_A_r,      "", {A_reg, r_choice}
-entry CP_A_iHL,    "", {A_reg, HL_ind}
-entry CP_A_iri,    "", {A_reg, ri_ind_choice}
-entry CPD_,     "CPD", {A_reg, HL_ind, BC_reg}
-entry CPDR_,   "CPDR", {A_reg, HL_ind, BC_reg}
-entry CPI_,     "CPI", {A_reg, HL_ind, BC_reg}
-entry CPIR_,   "CPIR", {A_reg, HL_ind, BC_reg}
-entry CPL_,     "CPL", {A_reg}
-instr_d equ last+1
-entry DAA_,     "DAA", {A_reg}
-entry DEC_r,    "DEC", {r_choice}
-entry DEC_iHl,     "", {HL_ind}
-entry DEC_iri,     "", {ri_ind_choice}
-entry DEC_rr,      "", {rr_choice}
-entry DEC_ri,      "", {ri_choice}
-entry DI_,       "DI", {}
-entry DJNZ_,   "DJNZ", {B_reg, d_const}
-instr_e equ last+1
-entry EI_,       "EI", {}
-entry EX_AF,     "EX", {AF_reg, AF_alt}
-entry EX_DE_HL,    "", {DE_reg, HL_reg}
-entry EX_iSP_HL,   "", {SP_ind, HL_reg}
-entry EX_iSP_ri,   "", {SP_ind, ri_choice}
-entry EXX_,     "EXX", {BC_reg, DE_reg, HL_reg, BC_alt, DE_alt, HL_alt}
-instr_h equ last+1
-entry HALT_,   "HALT", {}
-instr_i equ last+1
-entry IM_0,      "IM", {dat_0}
-entry IM_1,        "", {dat_1}
-entry IM_2,        "", {dat_2}
-entry IN_A_n,    "IN", {A_reg, n_const}
-entry IN_r_C,      "", {r_choice, C_reg}
-entry INC_r,    "INC", {r_choice}
-entry INC_iHL,     "", {HL_ind}
-entry INC_iri,     "", {ri_ind_choice}
-entry INC_rr,      "", {rr_choice}
-entry INC_ri,      "", {ri_choice}
-entry IND_,     "IND", {HL_ind, C_reg, B_reg}
-entry INDR_,   "INDR", {HL_ind, C_reg, B_reg}
-entry INI_,     "INI", {HL_ind, C_reg, B_reg}
-entry INIR_,   "INIR", {HL_ind, C_reg, B_reg}
-instr_j equ last+1
-entry JP_nn,     "JP", {nn_const}
-entry JP_cc_nn,    "", {cc_choice, nn_const}
-entry JP_HL,       "", {HL_reg}
-entry JP_ri,       "", {ri_choice}
-entry JR_d,      "JR", {d_const}
-entry JR_cr_d,     "", {cr_choice, d_const}
-instr_l equ last+1
+
+instr_ld8 equ last+1
 entry LD_r_n,    "LD", {r_choice, n_const}
 entry LD_r_r,      "", {r_choice, r_choice}
 entry LD_r_iHL,    "", {r_choice, HL_ind}
@@ -209,6 +136,8 @@ entry LD_iBC_A,    "", {BC_ind, A_reg}
 entry LD_iDE_A,    "", {DE_ind, A_reg}
 entry LD_I_A,      "", {I_reg, A_reg}
 entry LD_R_A,      "", {R_reg, A_reg}
+
+instr_ld16 equ last+1
 entry LD_rr_nn,    "", {rr_choice, nn_const}
 entry LD_rr_inn,   "", {rr_choice, nn_ind}
 entry LD_ri_nn,    "", {ri_choice, nn_const}
@@ -217,37 +146,86 @@ entry LD_SP_HL,    "", {SP_reg, HL_reg}
 entry LD_SP_ri,    "", {SP_reg, ri_choice}
 entry LD_inn_rr,   "", {nn_ind, rr_choice}
 entry LD_inn_ri,   "", {nn_ind, ri_choice}
-entry LDD_,     "LDD", {DE_ind, HL_ind, BC_reg}
-entry LDDR_,   "LDDR", {DE_ind, HL_ind, BC_reg}
-entry LDI_,     "LDI", {DE_ind, HL_ind, BC_reg}
-entry LDIR_,   "LDIR", {DE_ind, HL_ind, BC_reg}
-instr_n equ last+1
-entry NEG_,     "NEG", {A_reg}
-entry NOP_,     "NOP", {}
-instr_o equ last+1
-entry OR_A_n,    "OR", {A_reg, n_const}
-entry OR_A_r,      "", {A_reg, r_choice}
-entry OR_A_iHL,    "", {A_reg, HL_ind}
-entry OR_A_iri,    "", {A_reg, ri_ind_choice}
-entry OTDR_,   "OTDR", {C_reg, HL_ind, B_reg}
-entry OTIR_,   "OTIR", {C_reg, HL_ind, B_reg}
-entry OUT_n_A,  "OUT", {n_const, A_reg}
-entry OUT_C_r,     "", {C_reg, r_choice}
-entry OUTD_,   "OUTD", {C_reg, HL_ind, B_reg}
-entry OUTI_,   "OUTI", {C_reg, HL_ind, B_reg}
-instr_p equ last+1
 entry POP_rp,   "POP", {rp_choice}
 entry POP_ri,      "", {ri_choice}
 entry PUSH_rp, "PUSH", {rp_choice}
 entry PUSH_ri,     "", {ri_choice}
-instr_r equ last+1
+entry EX_AF,     "EX", {AF_reg, AF_alt}
+entry EX_DE_HL,    "", {DE_reg, HL_reg}
+entry EX_iSP_HL,   "", {SP_ind, HL_reg}
+entry EX_iSP_ri,   "", {SP_ind, ri_choice}
+entry EXX_,     "EXX", {BC_reg, DE_reg, HL_reg, BC_alt, DE_alt, HL_alt}
+
+instr_arith8 equ last+1
+entry ADD_A_n,  "ADD", {A_reg, n_const}
+entry ADD_A_r,     "", {A_reg, r_choice}
+entry ADD_A_iHL,   "", {A_reg, HL_ind}
+entry ADD_A_iri,   "", {A_reg, ri_ind_choice}
+entry ADC_A_n,  "ADC", {A_reg, n_const}
+entry ADC_A_r,     "", {A_reg, r_choice}
+entry ADC_A_iHL,   "", {A_reg, HL_ind}
+entry ADC_A_iri,   "", {A_reg, ri_ind_choice}
+entry SUB_A_n,  "SUB", {A_reg, n_const}
+entry SUB_A_r,     "", {A_reg, r_choice}
+entry SUB_A_iHL,   "", {A_reg, HL_ind}
+entry SUB_A_iri,   "", {A_reg, ri_ind_choice}
+entry SBC_A_n,  "SBC", {A_reg, n_const}
+entry SBC_A_r,     "", {A_reg, r_choice}
+entry SBC_A_iHL,   "", {A_reg, HL_ind}
+entry SBC_A_iri,   "", {A_reg, ri_ind_choice}
+entry CP_A_n,    "CP", {A_reg, n_const}
+entry CP_A_r,      "", {A_reg, r_choice}
+entry CP_A_iHL,    "", {A_reg, HL_ind}
+entry CP_A_iri,    "", {A_reg, ri_ind_choice}
+entry NEG_,     "NEG", {A_reg}
+entry DAA_,     "DAA", {A_reg}
+
+instr_arith16 equ last+1
+entry ADD_HL_rr,"ADD", {HL_reg, rr_choice}
+entry ADD_IX_rx,   "", {IX_reg, rx_choice}
+entry ADD_IY_ry,   "", {IY_reg, ry_choice}
+entry ADC_HL_rr,"ADC", {HL_reg, rr_choice}
+entry SBC_HL_rr,"SBC", {HL_reg, rr_choice}
+
+instr_decinc equ last+1
+entry DEC_r,    "DEC", {r_choice}
+entry DEC_iHl,     "", {HL_ind}
+entry DEC_iri,     "", {ri_ind_choice}
+entry DEC_rr,      "", {rr_choice}
+entry DEC_ri,      "", {ri_choice}
+entry INC_r,    "INC", {r_choice}
+entry INC_iHL,     "", {HL_ind}
+entry INC_iri,     "", {ri_ind_choice}
+entry INC_rr,      "", {rr_choice}
+entry INC_ri,      "", {ri_choice}
+
+instr_logic equ last+1
+entry AND_A_n,  "AND", {A_reg, n_const}
+entry AND_A_r,     "", {A_reg, r_choice}
+entry AND_A_iHL,   "", {A_reg, HL_ind}
+entry AND_A_iri,   "", {A_reg, ri_ind_choice}
+entry OR_A_n,    "OR", {A_reg, n_const}
+entry OR_A_r,      "", {A_reg, r_choice}
+entry OR_A_iHL,    "", {A_reg, HL_ind}
+entry OR_A_iri,    "", {A_reg, ri_ind_choice}
+entry XOR_A_n,  "XOR", {A_reg, n_const}
+entry XOR_A_r,     "", {A_reg, r_choice}
+entry XOR_A_iHL,   "", {A_reg, HL_ind}
+entry XOR_A_iri,   "", {A_reg, ri_ind_choice}
+entry CPL_,     "CPL", {A_reg}
+
+instr_bits equ last+1
+entry BIT_b_r,  "BIT", {b_const, r_choice}
+entry BIT_b_iHL,   "", {b_const, HL_ind}
+entry BIT_b_iri,   "", {b_const, ri_ind_choice}
 entry RES_b_r,  "RES", {b_const, r_choice}
 entry RES_b_iHL,   "", {b_const, HL_ind}
 entry RES_b_iri,   "", {b_const, ri_ind_choice}
-entry RET_,     "RET", {}
-entry RET_cc,      "", {cc_choice}
-entry RETI_,   "RETI", {}
-entry RETN_,   "RETN", {}
+entry SET_b_r,  "SET", {b_const, r_choice}
+entry SET_b_iHL,   "", {b_const, HL_ind}
+entry SET_b_iri,   "", {b_const, ri_ind_choice}
+
+instr_rotate equ last+1
 entry RL_r,      "RL", {r_choice}
 entry RL_iHL,      "", {HL_ind}
 entry RL_iri,      "", {ri_ind_choice}
@@ -266,17 +244,8 @@ entry RRC_iHL,     "", {HL_ind}
 entry RRC_iri,     "", {ri_ind_choice}
 entry RRCA_,   "RRCA", {A_reg}
 entry RRD_,     "RRD", {A_reg, HL_ind}
-entry RST_,     "RST", {p_choice}
-instr_s equ last+1
-entry SBC_A_n,  "SBC", {A_reg, n_const}
-entry SBC_A_r,     "", {A_reg, r_choice}
-entry SBC_A_iHL,   "", {A_reg, HL_ind}
-entry SBC_A_iri,   "", {A_reg, ri_ind_choice}
-entry SBC_HL_rr,   "", {HL_reg, rr_choice}
-entry SCF_,     "SCF", {}
-entry SET_b_r,  "SET", {b_const, r_choice}
-entry SET_b_iHL,   "", {b_const, HL_ind}
-entry SET_b_iri,   "", {b_const, ri_ind_choice}
+
+instr_shift equ last+1
 entry SLA_r,    "SLA", {r_choice}
 entry SLA_iHL,     "", {HL_ind}
 entry SLA_iri,     "", {ri_ind_choice}
@@ -286,15 +255,57 @@ entry SRA_iri,     "", {ri_ind_choice}
 entry SRL_r,    "SRL", {r_choice}
 entry SRL_iHL,     "", {HL_ind}
 entry SRL_iri,     "", {ri_ind_choice}
-entry SUB_A_n,  "SUB", {A_reg, n_const}
-entry SUB_A_r,     "", {A_reg, r_choice}
-entry SUB_A_iHL,   "", {A_reg, HL_ind}
-entry SUB_A_iri,   "", {A_reg, ri_ind_choice}
-instr_x equ last+1
-entry XOR_A_n,  "XOR", {A_reg, n_const}
-entry XOR_A_r,     "", {A_reg, r_choice}
-entry XOR_A_iHL,   "", {A_reg, HL_ind}
-entry XOR_A_iri,   "", {A_reg, ri_ind_choice}
+
+instr_jump equ last+1
+entry JR_d,      "JR", {d_const}
+entry JR_cr_d,     "", {cr_choice, d_const}
+entry DJNZ_,   "DJNZ", {B_reg, d_const}
+entry JP_nn,     "JP", {nn_const}
+entry JP_cc_nn,    "", {cc_choice, nn_const}
+entry JP_HL,       "", {HL_reg}
+entry JP_ri,       "", {ri_choice}
+entry CALL_nn, "CALL", {nn_const}
+entry CALL_cc_nn,  "", {cc_choice, nn_const}
+entry RET_,     "RET", {}
+entry RET_cc,      "", {cc_choice}
+entry RETI_,   "RETI", {}
+entry RETN_,   "RETN", {}
+entry RST_,     "RST", {p_choice}
+
+instr_block equ last+1
+entry LDD_,     "LDD", {DE_ind, HL_ind, BC_reg}
+entry LDDR_,   "LDDR", {DE_ind, HL_ind, BC_reg}
+entry LDI_,     "LDI", {DE_ind, HL_ind, BC_reg}
+entry LDIR_,   "LDIR", {DE_ind, HL_ind, BC_reg}
+entry CPD_,     "CPD", {A_reg, HL_ind, BC_reg}
+entry CPDR_,   "CPDR", {A_reg, HL_ind, BC_reg}
+entry CPI_,     "CPI", {A_reg, HL_ind, BC_reg}
+entry CPIR_,   "CPIR", {A_reg, HL_ind, BC_reg}
+entry IND_,     "IND", {HL_ind, C_reg, B_reg}
+entry INDR_,   "INDR", {HL_ind, C_reg, B_reg}
+entry INI_,     "INI", {HL_ind, C_reg, B_reg}
+entry INIR_,   "INIR", {HL_ind, C_reg, B_reg}
+entry OUTD_,   "OUTD", {C_reg, HL_ind, B_reg}
+entry OTDR_,   "OTDR", {C_reg, HL_ind, B_reg}
+entry OUTI_,   "OUTI", {C_reg, HL_ind, B_reg}
+entry OTIR_,   "OTIR", {C_reg, HL_ind, B_reg}
+
+instr_io equ last+1
+entry IN_A_n,    "IN", {A_reg, n_const}
+entry IN_r_C,      "", {r_choice, C_reg}
+entry OUT_n_A,  "OUT", {n_const, A_reg}
+entry OUT_C_r,     "", {C_reg, r_choice}
+
+instr_misc equ last+1
+entry HALT_,   "HALT", {}
+entry NOP_,     "NOP", {}
+entry SCF_,     "SCF", {}
+entry CCF_,     "CCF", {}
+entry DI_,       "DI", {}
+entry EI_,       "EI", {}
+entry IM_0,      "IM", {dat_0}
+entry IM_1,        "", {dat_1}
+entry IM_2,        "", {dat_2}
 
 last_instruction equ last
 

@@ -25,8 +25,7 @@ debug_align $10
 label:
 .if debug
 jr label_code
-.db "label"
-fill " ", ((16-($ % 16)) % 16)
+.db ":label:"
 .endif
 label_code:
 .endm
@@ -36,30 +35,109 @@ entrypoint asm21
 .block
     CALL ROM_CLEAR_SCREEN
     LD E, 4
-    LD D, 0
-    LD B, instr_l
+    LD D, 2
+    LD B, 26
+legend:
+    LD A, E
+    OUT gaddr_l, A
+    LD A, D
+    OUT gaddr_h, A
+    LD A, $07
+    OUT (color_io), A
+    LD A, 26 + "A"
+    SUB B
+    OUT (chars_io), A
+    LD A, $07
+    OUT (color_io), A
+    LD A, ":"
+    OUT (chars_io), A
+    LD A, " "
+    OUT (chars_io), A
+    INC D
+    DJNZ legend
+
+    LD E, 7
+    LD D, 2
+group_count equ group_names-group_table
+    LD C, group_count
+    LD HL, group_names
 next_line:
     LD A, E
     OUT gaddr_l, A
     LD A, D
     OUT gaddr_h, A
+print_pstr:
+    LD B, (HL)
+    INC HL
+next_char:
+    LD A, $0A
+    OUT (color_io),A
+    LD A, (HL)
+    INC HL
+    OUT (chars_io), A
+    DJNZ next_char
     INC D
-    LD A, B
-    PUSH DE
-    CALL print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
-    POP DE
-    INC A
-    LD B, A
-    CP instr_n
-    JR C, next_line
+    DEC C
+    JR NZ, next_line
+
 wait:
     CALL ROM_GET_KEY
     JR Z, wait
     CALL ROM_CLEAR_SCREEN
     RET
+group_table:
+    .db instr_ld8
+    .db instr_ld16
+    .db instr_arith8
+    .db instr_arith16
+    .db instr_decinc
+    .db instr_logic
+    .db instr_bits
+    .db instr_rotate
+    .db instr_shift
+    .db instr_jump
+    .db instr_block
+    .db instr_io
+    .db instr_misc
+group_names:
+    .pstr "8-bit data move"
+    .pstr "16-bit data move"
+    .pstr "8-bit arithmetic"
+    .pstr "16-bit arithmetic"
+    .pstr "decrement/increment"
+    .pstr "logic"
+    .pstr "single bit operation"
+    .pstr "bit rotation"
+    .pstr "bit shift"
+    .pstr "jump"
+    .pstr "block operations"
+    .pstr "input/output"
+    .pstr "other"
 .endblock
 
-entrypoint test_print
+entrypoint list_instr_B_to_C
+.block
+    LD E, 4
+    LD D, 3
+next_line:
+    LD A, E
+    OUT gaddr_l, A
+    LD A, D
+    OUT gaddr_h, A
+    LD A, B
+    CP C
+    RET Z
+    PUSH BC
+    PUSH DE
+    CALL print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
+    POP DE
+    POP BC
+    INC B
+    INC D
+    JR next_line
+.endblock
+
+entrypoint test_print_source
 .block
     LD E, 4
     LD D, 3

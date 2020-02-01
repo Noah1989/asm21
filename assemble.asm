@@ -1,8 +1,8 @@
 last := 0
 .macro asmstr, instr, strat, arg
-.if instr?<=last
-.error wrong order for instr
-.endif
+;.if instr?<=last
+;    .error wrong order for instr
+;.endif
 org stable + instr
 .db strat
 org atable + instr
