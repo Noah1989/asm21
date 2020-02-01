@@ -13,15 +13,15 @@ color_inc   equ $bd
 pattern_inc equ $be 
 palette_inc equ $bf
 
-init_graphics    equ $0500
-load_palette     equ $0400
-load_chars       equ $0600
-clear_screen     equ $0700
-clear_screen_col equ $0702
-print_byte       equ $0900
-get_key          equ $0c00 
+init_graphics    equ $00d0
+load_palette     equ $00f0
+load_chars       equ $0150
+clear_screen     equ $01b0
+clear_screen_col equ $01c2
+print_byte       equ $0350
+get_key          equ $0200
 
-org $8100
+org $8000
 
 call clear_screen
 

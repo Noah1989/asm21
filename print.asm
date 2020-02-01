@@ -220,3 +220,33 @@ table:
     .db pseudo_instructions
     .db 0
 .endblock
+
+entrypoint print_pstr_HL_trash_A
+.block
+    PUSH BC
+    LD B, (HL)
+    INC HL
+next_char:
+    LD A, $0A
+    OUT (color_io),A
+    LD A, (HL)
+    INC HL
+    OUT (chars_io), A
+    DJNZ next_char
+    POP BC
+    RET
+.endblock
+
+entrypoint fill_right_30_txtlen_C_trash_A_C
+.block
+    LD A, 30
+    SUB C
+    LD C, B
+    LD B, A
+    LD A, " "
+loop:
+    OUT (chars_io), A
+    DJNZ loop
+    LD B, C
+    RET
+.endblock

@@ -37,7 +37,7 @@ entrypoint asm21
     LD E, 4
     LD D, 2
     LD B, 26
-legend:
+legend_loop:
     LD A, E
     OUT gaddr_l, A
     LD A, D
@@ -54,37 +54,46 @@ legend:
     LD A, " "
     OUT (chars_io), A
     INC D
-    DJNZ legend
-
+    DJNZ legend_loop
+list_goups:
     LD E, 7
     LD D, 2
-group_count equ group_names-group_table
-    LD C, group_count
+group_count equ group_table_end-group_table+1
+    LD B, 26
     LD HL, group_names
 next_line:
     LD A, E
     OUT gaddr_l, A
     LD A, D
     OUT gaddr_h, A
-print_pstr:
-    LD B, (HL)
-    INC HL
-next_char:
-    LD A, $0A
-    OUT (color_io),A
-    LD A, (HL)
-    INC HL
-    OUT (chars_io), A
-    DJNZ next_char
+    LD C, (HL)
+    XOR A
+    CP C
+    JR Z, emptyline
+    CALL print_pstr_HL_trash_A
+emptyline:
+    CALL fill_right_30_txtlen_C_trash_A_C
     INC D
-    DEC C
-    JR NZ, next_line
-
+    DJNZ next_line
+select_group:
+    CALL input_key_az_result_C_zero_B
+    LD A, C
+    DEC A
+    JP M, ROM_CLEAR_SCREEN
+    CP group_count
+    JR NC, select_group
+    ADD A, lsb(group_table)
+    LD L, A
+    LD H, msb(group_table)
+    LD B, (HL)
+    INC L
+    LD C, (HL)
+    CALL list_instr_B_to_C
 wait:
     CALL ROM_GET_KEY
     JR Z, wait
-    CALL ROM_CLEAR_SCREEN
-    RET
+    JR list_goups
+
 group_table:
     .db instr_ld8
     .db instr_ld16
@@ -98,7 +107,12 @@ group_table:
     .db instr_jump
     .db instr_block
     .db instr_io
+group_table_end:
     .db instr_misc
+    .db pseudo_instructions
+.if msb(group_table) != msb(group_table_end)
+.error "group_table must not cross 256-byte boudary"
+.endif
 group_names:
     .pstr "8-bit data move"
     .pstr "16-bit data move"
@@ -113,23 +127,27 @@ group_names:
     .pstr "block operations"
     .pstr "input/output"
     .pstr "other"
+    .db 0
 .endblock
 
 entrypoint list_instr_B_to_C
 .block
-    LD E, 4
-    LD D, 3
+    LD E, 7
+    LD D, 2
 next_line:
+    LD A, D
+    CP 2 + 26
+    RET Z
+    OUT gaddr_h, A
     LD A, E
     OUT gaddr_l, A
-    LD A, D
-    OUT gaddr_h, A
     LD A, B
     CP C
-    RET Z
     PUSH BC
     PUSH DE
-    CALL print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
+    LD C, 0
+    CALL C, print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
+    CALL fill_right_30_txtlen_C_trash_A_C
     POP DE
     POP BC
     INC B
@@ -139,8 +157,8 @@ next_line:
 
 entrypoint test_print_source
 .block
-    LD E, 4
-    LD D, 3
+    LD E, 7
+    LD D, 2
     LD HL, source_buffer
 next_line:
     LD A, E
@@ -160,10 +178,11 @@ next_token:
     RET
 .endblock
 
-.include find.asm
-.include print.asm
 .include namelist.asm
+.include find.asm
+.include input.asm
 .include assemble.asm
+.include print.asm
 
 debug_align $1000
 .if ($-code_start)?>$1000

@@ -320,7 +320,7 @@ entry define, ":", {n_const, text, expr}
 entry data, "'", {expr}
 entry comment, "!", {text}
 entry undefined, "?", {}
-entry unused, "", {}
+entry cursor, $DB, {}
 
 ; All tokens above introduce a new line in the source listing, tokens below do not.
 inlines equ last+1
