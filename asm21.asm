@@ -34,6 +34,7 @@ code_start:
 entrypoint asm21
 .block
     CALL ROM_CLEAR_SCREEN
+    CALL print_source
     LD E, 4
     LD D, 2
     LD B, 26
@@ -155,9 +156,9 @@ next_line:
     JR next_line
 .endblock
 
-entrypoint test_print_source
+entrypoint print_source
 .block
-    LD E, 7
+    LD E, 40
     LD D, 2
     LD HL, source_buffer
 next_line:
@@ -190,50 +191,5 @@ debug_align $1000
 .endif
 
 source_buffer:
-.macro encode, char
-.db (char+0) / 16 + dat_0
-.db (char+0) % 16 + dat_0
-.endm
-.db ld_r_n, h_reg, hex_number, dat_1, dat_7
-.db ld_r_n, e_reg, bin_number, dat_1, dat_1, dat_0, dat_1
-.db call_nn, reference, dat_0
-.db ld_r_r, b_reg, h_reg
-.db ld_r_r, c_reg, l_reg
 .db ret_
-.db label, dat_0
-encode "m"
-encode "u"
-encode "l"
-encode "t"
-encode "_"
-encode "h"
-encode "_"
-encode "e"
-.db ld_r_n, d_reg, dat_0
-.db sla_r, h_reg
-.db sbc_a_r, a_reg
-.db and_a_r, e_reg
-.db ld_r_r, l_reg, a_reg
-.db ld_r_n, b_reg, dat_7
-.db label, dat_1
-encode "l"
-encode "o"
-encode "o"
-encode "p"
-.db add_hl_rr, hl_reg
-.db jr_cr_d, nc_flag, reference, dat_2
-.db add_hl_rr, de_reg
-.db label, dat_2
-encode "n"
-encode "o"
-encode "a"
-encode "d"
-encode "d"
-.db djnz_, reference, dat_1
-.db ret_
-.db comment
-encode "t"
-encode "e"
-encode "s"
-encode "t"
 .db 0
