@@ -104,426 +104,426 @@ debug_align $100
 entrypoint assemble_source_HL_output_DE_return_count_C
 .block
 retry:
-    LD A, (HL)
-    INC HL
-    AND A
-    JR Z, retry
-    ;CP inlines
-    ;JR NC, error; not a new line?!
-    LD (DE), A; for later
-    LD B, msb(stable)
-    LD C, A
-    LD A, (BC)
-    LD C, A
-    LD A, (BC)
-    PUSH AF
-    DEC BC
-    LD A, (BC)
-    POP BC
-    LD C, A
-    PUSH BC; handler address
-    LD A, (DE); stored from earlier
-    LD B, msb(atable)
-    LD C, A
-    LD A, (BC); handler argument
-    RET; jumps to handler
+	LD A, (HL)
+	INC HL
+	AND A
+	JR Z, retry
+	;CP inlines
+	;JR NC, error; not a new line?!
+	LD (DE), A; for later
+	LD B, msb(stable)
+	LD C, A
+	LD A, (BC)
+	LD C, A
+	LD A, (BC)
+	PUSH AF
+	DEC BC
+	LD A, (BC)
+	POP BC
+	LD C, A
+	PUSH BC; handler address
+	LD A, (DE); stored from earlier
+	LD B, msb(atable)
+	LD C, A
+	LD A, (BC); handler argument
+	RET; jumps to handler
 .endblock
 
 entrypoint lbl_handler
 .block
-    CALL eval_expression_HL_write_DE
-    ; TODO: write result to symbol table
-    DEC DE
-    DEC DE
-    LD C, 0
+	CALL eval_expression_HL_write_DE
+	; TODO: write result to symbol table
+	DEC DE
+	DEC DE
+	LD C, 0
 skipname: ; name text only for display
-    LD A, (HL)
-    CP dat_0
-    RET C
-    INC HL
-    JR skipname
+	LD A, (HL)
+	CP dat_0
+	RET C
+	INC HL
+	JR skipname
 .endblock
 
 entrypoint opcode_handler
 .block
-    LD (DE), A
-    INC DE
-    LD C, 1
-    RET
+	LD (DE), A
+	INC DE
+	LD C, 1
+	RET
 .endblock
 
 entrypoint op_d_handler
 .block
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    DEC DE ; TODO: calculate offset
-    LD C, 2
-    RET
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	DEC DE ; TODO: calculate offset
+	LD C, 2
+	RET
 .endblock
 
 entrypoint op_n_handler
 .block
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    DEC DE
-    LD C, 2
-    RET
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	DEC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint op_nn_handler
 .block
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    LD C, 3
-    RET
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	LD C, 3
+	RET
 .endblock
 
 entrypoint ed_op_handler
 .block
-    LD C, A
-    LD A, $ED
-    LD (DE), A
-    INC DE
-    LD A, C
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	LD C, A
+	LD A, $ED
+	LD (DE), A
+	INC DE
+	LD A, C
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint ir_op_handler
 .block
-    LD C, A
-    CALL encode_ir_prefix
-    LD (DE), A
-    INC DE
-    LD A, C
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	LD C, A
+	CALL encode_ir_prefix
+	LD (DE), A
+	INC DE
+	LD A, C
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint ir_op_d_handler
 .block
-    LD C, A
-    CALL encode_ir_prefix
-    LD (DE), A
-    INC DE
-    LD A, C
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    DEC DE
-    LD C, 3
-    RET
+	LD C, A
+	CALL encode_ir_prefix
+	LD (DE), A
+	INC DE
+	LD A, C
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	DEC DE
+	LD C, 3
+	RET
 .endblock
 
 entrypoint encode_ir_prefix
 .block
-    LD A, (HL)
-    INC HL
-    CP IX_ind
-    JR NZ, is_iy
+	LD A, (HL)
+	INC HL
+	CP IX_ind
+	JR NZ, is_iy
 is_ix:
-    LD A, $DD
-    RET
+	LD A, $DD
+	RET
 is_iy:
-    LD A, $FD
-    RET
+	LD A, $FD
+	RET
 .endblock
 
 entrypoint hreg_handler
 .block
-    CALL encode_hreg
-    LD (DE), A
-    INC DE
-    LD C, 1
-    RET
+	CALL encode_hreg
+	LD (DE), A
+	INC DE
+	LD C, 1
+	RET
 .endblock
 
 entrypoint hreg_n_handler
 .block
-    CALL encode_hreg
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    DEC DE ; discard upper byte
-    LD C, 2
-    RET
+	CALL encode_hreg
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	DEC DE ; discard upper byte
+	LD C, 2
+	RET
 .endblock
 
 entrypoint hreg_lreg_handler
 .block
-    CALL encode_hreg
-    LD C, A
-    LD A, (HL)
-    INC HL
-    SUB regs_8
-    ADD A, C
-    LD (DE), A
-    INC DE
-    LD C, 1
-    RET
+	CALL encode_hreg
+	LD C, A
+	LD A, (HL)
+	INC HL
+	SUB regs_8
+	ADD A, C
+	LD (DE), A
+	INC DE
+	LD C, 1
+	RET
 .endblock
 
 entrypoint lreg_handler
 .block
-    LD C, A
-    LD A, (HL)
-    INC HL
-    SUB regs_8
-    ADD A, C
-    LD (DE), A
-    INC DE
-    LD C, 1
-    RET
+	LD C, A
+	LD A, (HL)
+	INC HL
+	SUB regs_8
+	ADD A, C
+	LD (DE), A
+	INC DE
+	LD C, 1
+	RET
 .endblock
 
 entrypoint cb_lreg_handler
 .block
-    LD C, A
-    LD A, $CB
-    LD (DE), A
-    INC DE
-    LD A, (HL)
-    INC HL
-    SUB regs_8
-    ADD A, C
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	LD C, A
+	LD A, $CB
+	LD (DE), A
+	INC DE
+	LD A, (HL)
+	INC HL
+	SUB regs_8
+	ADD A, C
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint cb_bit_handler
 .block
-    PUSH AF
-    LD A, $CB
-    LD (DE), A
-    INC DE
-    CALL encode_bit
-    POP BC
-    ADD A, B
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	PUSH AF
+	LD A, $CB
+	LD (DE), A
+	INC DE
+	CALL encode_bit
+	POP BC
+	ADD A, B
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint cb_bit_lreg_handler
 .block
-    PUSH AF
-    LD A, $CB
-    LD (DE), A
-    INC DE
-    CALL encode_bit
-    POP BC
-    ADD A, B
-    LD C, A
-    LD A, (HL)
-    SUB regs_8
-    ADD A, C
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	PUSH AF
+	LD A, $CB
+	LD (DE), A
+	INC DE
+	CALL encode_bit
+	POP BC
+	ADD A, B
+	LD C, A
+	LD A, (HL)
+	SUB regs_8
+	ADD A, C
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint ir_cb_d_bit_handler
 .block
-    PUSH AF
-    CALL encode_ir_prefix
-    LD (DE), A
-    INC DE
-    LD A, $CB
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    DEC DE
-    CALL encode_bit
-    POP BC
-    ADD A, B
-    LD (DE), A
-    INC DE
-    LD C, 4
-    RET
+	PUSH AF
+	CALL encode_ir_prefix
+	LD (DE), A
+	INC DE
+	LD A, $CB
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	DEC DE
+	CALL encode_bit
+	POP BC
+	ADD A, B
+	LD (DE), A
+	INC DE
+	LD C, 4
+	RET
 .endblock
 
 entrypoint encode_bit
 .block
-    CALL eval_expression_HL_write_DE
-    DEC DE
-    DEC DE
-    LD A, (DE)
-    RLCA
-    RLCA
-    RLCA
-    RET
+	CALL eval_expression_HL_write_DE
+	DEC DE
+	DEC DE
+	LD A, (DE)
+	RLCA
+	RLCA
+	RLCA
+	RET
 .endblock
 
 entrypoint rreg_handler
 .block
-    CALL encode_rreg
-    LD (DE), A
-    INC DE
-    LD C, 1
-    RET
+	CALL encode_rreg
+	LD (DE), A
+	INC DE
+	LD C, 1
+	RET
 .endblock
 
 entrypoint ix_rreg_handler
 .block
-    LD C, A
-    LD A, $DD
-    JR common_prefix_rreg_handler
+	LD C, A
+	LD A, $DD
+	JR common_prefix_rreg_handler
 .endblock
 
 entrypoint iy_rreg_handler
 .block
-    LD C, A
-    LD A, $FD
-    jr common_prefix_rreg_handler
+	LD C, A
+	LD A, $FD
+	jr common_prefix_rreg_handler
 .endblock
 
 entrypoint ed_rreg_handler
 .block
-    LD C, A
-    LD A, $ED
+	LD C, A
+	LD A, $ED
 @common_prefix_rreg_handler:
-    LD (DE), A
-    INC DE
-    LD A, C
-    CALL encode_rreg
-    LD (DE), A
-    INC DE
-    LD C, 2
-    RET
+	LD (DE), A
+	INC DE
+	LD A, C
+	CALL encode_rreg
+	LD (DE), A
+	INC DE
+	LD C, 2
+	RET
 .endblock
 
 entrypoint cc_nn_handler
 .block
-    LD C, A
-    LD A, (HL)
-    INC HL
-    SUB NZ_flag
-    RLCA
-    RLCA
-    RLCA
-    ADD A, C
-    LD (DE), A
-    INC DE
-    CALL eval_expression_HL_write_DE
-    LD C, 3
-    RET
+	LD C, A
+	LD A, (HL)
+	INC HL
+	SUB NZ_flag
+	RLCA
+	RLCA
+	RLCA
+	ADD A, C
+	LD (DE), A
+	INC DE
+	CALL eval_expression_HL_write_DE
+	LD C, 3
+	RET
 .endblock
 
 entrypoint encode_hreg
 .block
-    LD C, A
-    LD A, (HL)
-    INC HL
-    SUB regs_8
-    RLCA
-    RLCA
-    RLCA
-    ADD A, C
-    RET
+	LD C, A
+	LD A, (HL)
+	INC HL
+	SUB regs_8
+	RLCA
+	RLCA
+	RLCA
+	ADD A, C
+	RET
 .endblock
 
 entrypoint encode_rreg
 .block
-    LD C, A
-    LD A, (HL)
-    INC HL
-    SUB regs_16
-    AND $03
-    RLCA
-    RLCA
-    RLCA
-    RLCA
-    ADD A, C
-    RET
+	LD C, A
+	LD A, (HL)
+	INC HL
+	SUB regs_16
+	AND $03
+	RLCA
+	RLCA
+	RLCA
+	RLCA
+	ADD A, C
+	RET
 .endblock
 
 entrypoint eval_expression_HL_write_DE
 .block
-    LD A, (HL)
-    INC HL
-    CP hex_number
-    JR Z, eval_hex_number_HL_write_DE
-    CP bin_number
-    JR Z, eval_bin_number_HL_write_DE
-    CP reference
-    JR Z, dereference_HL_write_DE
-    ; numbers 0-15 encoded as a single token without prefix
-    CP dat_0
-    JR C, unexpected
-    SUB dat_0
-    LD (DE), A
-    INC DE
-    XOR A
-    LD (DE), A
-    INC DE
-    RET
+	LD A, (HL)
+	INC HL
+	CP hex_number
+	JR Z, eval_hex_number_HL_write_DE
+	CP bin_number
+	JR Z, eval_bin_number_HL_write_DE
+	CP reference
+	JR Z, dereference_HL_write_DE
+	; numbers 0-15 encoded as a single token without prefix
+	CP dat_0
+	JR C, unexpected
+	SUB dat_0
+	LD (DE), A
+	INC DE
+	XOR A
+	LD (DE), A
+	INC DE
+	RET
 unexpected:
-    ; unexpected expression token, dump it for debugging
-    LD (DE), A
-    INC DE
-    LD (DE), A
-    INC DE
-    DEC HL ; leave token unprocessed
-    RET
+	; unexpected expression token, dump it for debugging
+	LD (DE), A
+	INC DE
+	LD (DE), A
+	INC DE
+	DEC HL ; leave token unprocessed
+	RET
 .endblock
 eval_hex_number_HL_write_DE:
 .block
-    XOR A
-    LD (DE), A
-    INC DE
-    LD (DE), A
-    DEC DE
-    EX DE, HL; now: DE=*source HL=*result
+	XOR A
+	LD (DE), A
+	INC DE
+	LD (DE), A
+	DEC DE
+	EX DE, HL; now: DE=*source HL=*result
 loop:
-    LD A, (DE)
-    SUB dat_0
-    JR C, done
-    INC DE
-    RLD
-    INC HL
-    RLD
-    DEC HL
-    JR loop
+	LD A, (DE)
+	SUB dat_0
+	JR C, done
+	INC DE
+	RLD
+	INC HL
+	RLD
+	DEC HL
+	JR loop
 done:
-    EX DE, HL
-    INC DE
-    INC DE
-    RET
+	EX DE, HL
+	INC DE
+	INC DE
+	RET
 .endblock
 eval_bin_number_HL_write_DE:
 .block
-    LD BC, 0
+	LD BC, 0
 loop:
-    LD A, (HL)
-    SUB dat_0
-    JR C, done
-    INC HL
-    RRA
-    RL C
-    RL B
-    JR loop
+	LD A, (HL)
+	SUB dat_0
+	JR C, done
+	INC HL
+	RRA
+	RL C
+	RL B
+	JR loop
 done:
-    LD A, C
-    LD (DE), A
-    INC DE
-    LD A, B
-    LD (DE), A
-    INC DE
-    RET
+	LD A, C
+	LD (DE), A
+	INC DE
+	LD A, B
+	LD (DE), A
+	INC DE
+	RET
 .endblock
 dereference_HL_write_DE:
 .block
-    ;TODO
-    JR eval_hex_number_HL_write_DE
+	;TODO
+	JR eval_hex_number_HL_write_DE
 .endblock
