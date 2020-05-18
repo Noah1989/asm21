@@ -1,8 +1,5 @@
 last := 0
 .macro asmstr, instr, strat, arg
-;.if instr?<=last
-;    .error wrong order for instr
-;.endif
 org stable + instr
 .db strat
 org atable + instr
@@ -13,7 +10,7 @@ last := instr
 debug_align $100
 .align $100; for quick lookup
 stable equ $
-jtable equ stable+last_instruction+1
+jtable equ stable+inlines
 atable equ stable+$100
 
 asmstr ADC_A_n,          op_n, $CE
@@ -68,7 +65,7 @@ asmstr SBC_A_r,          lreg, $98
 asmstr SLA_r,         cb_lreg, $20
 asmstr label,             lbl, $00
 
-last := last_instruction
+last := inlines-1
 .macro jentry, strat
 strat equ last+2
 .if strat?>$FF
@@ -102,7 +99,7 @@ jentry cc_nn       ; condition, 2-byte const
 jentry lbl         ; label (no code generated)
 debug_align $100
 
-.org atable+last_instruction+1
+.org atable+inlines
 
 entrypoint assemble_source_HL_output_DE_return_count_C
 .block
@@ -111,14 +108,12 @@ retry:
     INC HL
     AND A
     JR Z, retry
-    CP last_instruction+1
-    JR NC, notimpl; not an instruction?!
+    ;CP inlines
+    ;JR NC, error; not a new line?!
     LD (DE), A; for later
     LD B, msb(stable)
     LD C, A
     LD A, (BC)
-    AND A
-    JR Z, notimpl; not implemented
     LD C, A
     LD A, (BC)
     PUSH AF
@@ -132,19 +127,6 @@ retry:
     LD C, A
     LD A, (BC); handler argument
     RET; jumps to handler
-notimpl:
-    LD A, $10
-    RST $10
-    LD A, 2
-    RST $10
-    LD A, "?"
-    RST $10
-    LD A, $10
-    RST $10
-    LD A, 0
-    RST $10
-    LD C, 0
-    RET
 .endblock
 
 entrypoint lbl_handler

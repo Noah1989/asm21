@@ -4,7 +4,7 @@ gaddr_l .equ $B3
 gaddr_h .equ $B4
 
 .org $8000
-fill $76, $1000
+fill $FF, $1000
 
 .org $9000
 
@@ -14,7 +14,7 @@ debug equ 1
 .macro debug_align, %%1
 .if debug
 width := %%1
-fill $76, ((width-($ % width)) % width)
+fill $FF, ((width-($ % width)) % width)
 .endif
 .endm
 
@@ -35,13 +35,12 @@ entrypoint asm21
 .block
     CALL ROM_CLEAR_SCREEN
     CALL print_source
-    LD E, 4
-    LD D, 2
     LD B, 26
 legend_loop:
-    LD A, E
+    LD A, 4
     OUT gaddr_l, A
-    LD A, D
+    LD A, 26+2
+    SUB B
     OUT gaddr_h, A
     LD A, $07
     OUT (color_io), A
@@ -53,6 +52,12 @@ legend_loop:
     LD A, ":"
     OUT (chars_io), A
     LD A, " "
+    OUT (chars_io), A
+    LD A, 38
+    OUT gaddr_l, A
+    LD A, $07
+    OUT (color_io), A
+    LD A, $B3 ; vertical bar
     OUT (chars_io), A
     INC D
     DJNZ legend_loop
@@ -168,13 +173,12 @@ next_line:
     OUT gaddr_h, A
 next_token:
     PUSH DE
-    CALL print_source_HL_return_count_C_trash_DE
+    CALL print_source_HL_return_count_C_trash_A_B_DE
     POP DE
-    LD A, (HL)
-    CP inlines
-    JR NC, next_token
+    CALL fill_right_30_txtlen_C_trash_A_C
     INC D
-    AND A
+    LD A, (HL)
+    CP end_
     JR NZ, next_line
     RET
 .endblock
@@ -191,5 +195,9 @@ debug_align $1000
 .endif
 
 source_buffer:
+.db ld_a_inn, digits, dat_F, dat_0, dat_0, dat_1
+.db ld_rr_nn, hl_reg, digits, dat_F, dat_0, dat_0, dat_2
+.db add_a_ihl
+.db ld_inn_a, digits, dat_F, dat_0, dat_0, dat_3
 .db ret_
-.db 0
+.db end_

@@ -314,13 +314,13 @@ nospace equ last+1
 
 ; pseudo-instructions
 pseudo_instructions equ last+1
-entry origin, "@", {nn_const}
-entry label,  ".", {n_const, text}
-entry define, ":", {n_const, text, expr}
-entry data, "'", {expr}
-entry comment, "!", {text}
-entry undefined, "?", {}
-entry cursor, $DB, {}
+entry origin,    "@", {nn_const}
+entry label,     ".", {n_const, text}
+entry define,    ":", {n_const, text, expr}
+entry data,      "'", {expr}
+entry comment,   "!", {text}
+entry empty,     " ", {}
+entry end_,       "", {}
 
 ; All tokens above introduce a new line in the source listing, tokens below do not.
 inlines equ last+1
@@ -418,7 +418,7 @@ entry expr,      "e", {b_const, h_const, d_const, n_const, nn_const, text, digit
 entry b_const,   "b", {} ; bit number, truncate to 0..7
 entry h_const,   "h", {} ; half byte, truncate to $0..$F
 ; placeholders below require multiple data bytes from source
-entry d_const,   "d", {} ; displacement, truncate to -128..+127
+entry d_const,   "d", {} ; displacement, truncate to -128..+127 for index registers, calculate relative address for jumps
 entry n_const,   "n", {} ; 8-bit const, truncate to $00..$FF
 entry nn_const, "nn", {} ; 16-bit const, truncate to $0000..$FFFF
 ; these even have variable data length

@@ -9,6 +9,7 @@ chars_io equ $BC ; GPU name table with auto increment
 entrypoint print_name_A_ret_len_C_params_B_HL_trash_DE
 .block
     CALL find_descr_A_ret_name_C_DE_params_B_HL
+@print_descr_A_name_C_DE_trash_DE:
     PUSH BC
     EX DE, HL ; result: HL *name, DE *params
     LD B, C ; name length
@@ -75,7 +76,7 @@ done:
 
 ; Prints a piece of source from the address pointed to by HL.
 ; HL will be moved forward for every token consumed.
-entrypoint print_source_HL_return_count_C_trash_DE
+entrypoint print_source_HL_return_count_C_trash_A_B_DE
 .block
 retry:
     LD A, (HL)
@@ -116,9 +117,43 @@ first:
 switch:
         CP placeholders
         JR NC, switch_1
-            ; not a placeholder, just print the name
+            ; not placeholder, just print the name
             PUSH HL
-            CALL print_name_A_ret_len_C_params_B_HL_trash_DE
+            ; check if the name itself has a parameter (such as "IX+d")
+            CALL find_descr_A_ret_name_C_DE_params_B_HL
+            DJNZ name_has_no_param
+name_has_param:
+            DEC C ; remove ")"
+            LD B, A ; original bytecode token
+            ; get the parameter itself
+            LD A, (HL)
+            PUSH BC
+            PUSH DE
+            CALL find_descr_A_ret_name_C_DE_params_B_HL
+            LD A, C
+            POP DE
+            POP BC
+            NEG ; subtract param name length, "(ix+d" -> "(ix+"
+            ADD A, C
+            LD C, A
+            LD A, B ; restore original bytecode token
+            CALL print_descr_A_name_C_DE_trash_DE
+            POP HL
+            PUSH AF
+            PUSH BC
+            CALL print_source_HL_return_count_C_trash_A_B_DE
+            POP DE
+            LD A, C
+            ADD A, E
+            LD C, A
+            POP AF
+            CALL print_color_A
+            LD A, ")"
+            OUT (chars_io), A
+            INC C
+            JR switch_break
+name_has_no_param:
+            CALL print_descr_A_name_C_DE_trash_DE
             POP HL
             JR switch_break
 switch_1:
@@ -130,7 +165,7 @@ switch_1:
             CP digits
             JP Z, print_digits_HL
             ; generic placeholder, print single token from source
-            JR print_source_HL_return_count_C_trash_DE
+            JP print_source_HL_return_count_C_trash_A_B_DE
 switch_break:
         ; tally the number of characters printed
         LD A, C
