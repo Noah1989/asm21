@@ -1,15 +1,6 @@
-entrypoint input_key_az_result_C_zero_B
-.block
-loop:
-	CALL ROM_GET_KEY
-	JR Z, loop
-	LD BC, 27
-	LD HL, keys_table_end
-	CPDR
-	JR NZ, loop
-	RET
-keys_table:
+keys_esc:
 	.db $76 ;ESC
+keys_a:
 	.db $1C ;A
 	.db $32 ;B
 	.db $21 ;C
@@ -35,6 +26,18 @@ keys_table:
 	.db $1D ;W
 	.db $22 ;X
 	.db $35 ;Y
-keys_table_end:
+keys_z:
 	.db $1A ;Z
-.endblock
+keys_up:
+	.db $75 ;up
+keys_down:
+	.db $72 ;down
+
+input_handlers:
+	.db 27
+	.dw keys_z
+	.dw 0; TODO menu_input
+	.db 2
+	.dw keys_down
+	.dw 0; TODO cursor_updown
+	.db 0
