@@ -67,12 +67,24 @@ entrypoint menu_left
 	DEC	A
 	RET	M
 @menu_left_right_common:
+	LD	DE, (active_menu_entry)
+	LD	D, 0
+	LD	HL, active_submenu_store
+	ADD	HL, DE
 	LD	(active_menu_entry), A
-	CALL	gui_menubar
 	LD	A, (active_submenu_entry)
+	LD	(HL), A
+	AND	A
+	CALL	P, editor_redraw
+	CALL	gui_menubar
+	LD	DE, (active_menu_entry)
+	LD	D, 0
+	LD	HL, active_submenu_store
+	ADD	HL, DE
+	LD	A, (HL)
+	LD	(active_submenu_entry), A
 	AND	A
 	RET	M
-	CALL	editor_redraw
 	JP	gui_menu_dropdown
 .endblock
 
@@ -80,13 +92,20 @@ entrypoint menu_down
 .block
 	LD	A, (active_submenu_entry)
 	INC	A
+	LD	HL, submenu_count
+	CP	(HL)
+	RET	NC
 	LD	(active_submenu_entry), A
 	JP	gui_menu_dropdown
 .endblock
 
 entrypoint menu_up
 .block
-	LD	A, -1
+	LD	A, (active_submenu_entry)
+	AND	A
+	RET	M
+	DEC	A
 	LD	(active_submenu_entry), A
-	JP	editor_redraw
+	JP	M, editor_redraw
+	JP	gui_menu_dropdown
 .endblock

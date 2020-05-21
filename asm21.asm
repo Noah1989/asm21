@@ -57,6 +57,12 @@ entrypoint init
 	LD	A, -1
 	LD	(active_menu_entry), A
 	LD	(active_submenu_entry), A
+	LD	HL, active_submenu_store
+	LD	B, main_menu_count
+loop:
+	LD	(HL), A
+	INC	HL
+	DJNZ	loop
 	RET
 .endblock
 
@@ -89,6 +95,10 @@ defs 1
 active_menu_entry:
 defs 1
 active_submenu_entry:
+defs 1
+active_submenu_store:
+defs main_menu_count
+submenu_count:
 defs 1
 hint_pointer:
 defs 2

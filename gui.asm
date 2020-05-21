@@ -148,6 +148,9 @@ skip:
 loop3:
 	OUT	color_inc, A
 	DJNZ	loop3
+	LD	A, E
+	SUB	3
+	LD	(submenu_count), A
 	RET
 .endblock
 
