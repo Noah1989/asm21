@@ -1,43 +1,45 @@
-keys_esc:
-	.db $76 ;ESC
-keys_a:
-	.db $1C ;A
-	.db $32 ;B
-	.db $21 ;C
-	.db $23 ;D
-	.db $24 ;E
-	.db $2B ;F
-	.db $34 ;G
-	.db $33 ;H
-	.db $43 ;I
-	.db $3B ;J
-	.db $42 ;K
-	.db $4B ;L
-	.db $3A ;M
-	.db $31 ;N
-	.db $44 ;O
-	.db $4D ;P
-	.db $15 ;Q
-	.db $2D ;R
-	.db $1B ;S
-	.db $2C ;T
-	.db $3C ;U
-	.db $2A ;V
-	.db $1D ;W
-	.db $22 ;X
-	.db $35 ;Y
-keys_z:
-	.db $1A ;Z
-keys_up:
-	.db $75 ;up
-keys_down:
-	.db $72 ;down
+input_main:
+.db	$01 ; F9
+.dw	menu_activate
+.db	$09 ; F10
+.dw	quit
+.db	0
 
-input_handlers:
-	.db 27
-	.dw keys_z
-	.dw 0; TODO menu_input
-	.db 2
-	.dw keys_down
-	.dw 0; TODO cursor_updown
-	.db 0
+input_menu:
+.db	$76 ; ESC
+.dw	menu_abort
+.db	$01 ; F9
+.dw	menu_abort
+.db	$74 ; right arrow
+.dw	menu_right
+.db	$6B ; left arrow
+.dw	menu_left;
+.db	$72 ; down arrow
+.dw	menu_down;
+.db	$75 ; up arrow
+.dw	menu_up;
+.db	0
+
+entrypoint input_handler
+.block
+	CALL	ROM_GET_KEY
+	RET	Z
+	LD	C, A
+	LD	HL, (input_table_pointer)
+loop:
+	LD	A, (HL)
+	INC	HL
+	AND	A
+	RET	Z
+	CP	C
+	JR	Z, found
+	INC	HL
+	INC	HL
+	JR	loop
+found:
+	LD	E, (HL)
+	INC	HL
+	LD	D, (HL)
+	EX	DE, HL
+	JP	(HL)
+.endblock

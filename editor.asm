@@ -1,3 +1,9 @@
+entrypoint editor_redraw
+.block
+	CALL	gui_editor_top
+	JP	gui_editor_frame
+.endblock
+
 entrypoint print_source
 .block
 	LD E, 40

@@ -1,5 +1,6 @@
-color_io equ $B9 ; GPU color table
-chars_io equ $BC ; GPU name table with auto increment
+color_io  equ $B9 ; GPU color table
+chars_io  equ $BC ; GPU name table with auto increment
+color_inc equ $BD ; GPU color table with auto increment
 
 ; Finds and prints the name of the bytecode token in A.
 ; Returns number of characters printed in C

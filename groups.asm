@@ -1,34 +1,3 @@
-entrypoint menu_legend
-.block
-	LD B, 26
-legend_loop:
-	LD A, 4
-	OUT gaddr_l, A
-	LD A, 26+2
-	SUB B
-	OUT gaddr_h, A
-	LD A, $07
-	OUT (color_io), A
-	LD A, 26 + "A"
-	SUB B
-	OUT (chars_io), A
-	LD A, $07
-	OUT (color_io), A
-	LD A, ":"
-	OUT (chars_io), A
-	LD A, " "
-	OUT (chars_io), A
-	LD A, 38
-	OUT gaddr_l, A
-	LD A, $07
-	OUT (color_io), A
-	LD A, $B3 ; vertical bar
-	OUT (chars_io), A
-	INC D
-	DJNZ legend_loop
-	RET
-.endblock
-
 entrypoint menu_groups
 .block
 	LD E, 7
