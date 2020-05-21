@@ -114,29 +114,29 @@ source_buffer:
 .db	define, digits, dat_0, dat_1, terminator, dat_6, dat_7, dat_6, dat_1, dat_6, dat_4, dat_6, dat_4, dat_7, dat_2, dat_5, dat_f, dat_6, dat_c, digits, dat_b, dat_3
 .db	define, digits, dat_0, dat_2, terminator, dat_6, dat_7, dat_6, dat_1, dat_6, dat_4, dat_6, dat_4, dat_7, dat_2, dat_5, dat_f, dat_6, dat_8, digits, dat_b, dat_4
 .db	empty
-.db	define, digits, dat_0, dat_3, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, digits, dat_b, dat_8
-.db	define, digits, dat_0, dat_4, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, digits, dat_b, dat_9
+.db	define, digits, dat_0, dat_3, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, alignment, dat_3, digits, dat_b, dat_8
+.db	define, digits, dat_0, dat_4, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, alignment, dat_2, digits, dat_b, dat_9
 .db	define, digits, dat_0, dat_5, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, digits, dat_b, dat_a
 .db	define, digits, dat_0, dat_6, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, digits, dat_b, dat_b
 .db	empty
-.db	define, digits, dat_0, dat_7, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_8
-.db	define, digits, dat_0, dat_8, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_9
+.db	define, digits, dat_0, dat_7, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_3, digits, dat_b, dat_8
+.db	define, digits, dat_0, dat_8, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_2, digits, dat_b, dat_9
 .db	define, digits, dat_0, dat_9, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_a
 .db	define, digits, dat_0, dat_a, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_b
 .db	empty
-.db	define, digits, dat_0, dat_b, terminator, dat_6, dat_9, dat_6, dat_e, dat_6, dat_9, dat_7, dat_4, dat_5, dat_f, dat_6, dat_7, dat_7, dat_2, dat_6, dat_1, dat_7, dat_0, dat_6, dat_8, dat_6, dat_9, dat_6, dat_3, dat_7, dat_3, digits, dat_0, dat_0, dat_d, dat_0
-.db	define, digits, dat_0, dat_c, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, digits, dat_0, dat_0, dat_f, dat_0
-.db	define, digits, dat_0, dat_d, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_7, dat_3, digits, dat_0, dat_1, dat_5, dat_0
-.db	define, digits, dat_0, dat_e, terminator, dat_6, dat_3, dat_6, dat_c, dat_6, dat_5, dat_6, dat_1, dat_7, dat_2, dat_5, dat_f, dat_7, dat_3, dat_6, dat_3, dat_7, dat_2, dat_6, dat_5, dat_6, dat_5, dat_6, dat_e, digits, dat_0, dat_1, dat_b, dat_0
+.db	define, digits, dat_0, dat_b, terminator, dat_6, dat_9, dat_6, dat_e, dat_6, dat_9, dat_7, dat_4, dat_5, dat_f, dat_6, dat_7, dat_7, dat_2, dat_6, dat_1, dat_7, dat_0, dat_6, dat_8, dat_6, dat_9, dat_6, dat_3, dat_7, dat_3, alignment, dat_3, digits, dat_0, dat_0, dat_d, dat_0
+.db	define, digits, dat_0, dat_c, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, alignment, dat_4, digits, dat_0, dat_0, dat_f, dat_0
+.db	define, digits, dat_0, dat_d, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_7, dat_3, alignment, dat_6, digits, dat_0, dat_1, dat_5, dat_0
+.db	define, digits, dat_0, dat_e, terminator, dat_6, dat_3, dat_6, dat_c, dat_6, dat_5, dat_6, dat_1, dat_7, dat_2, dat_5, dat_f, dat_7, dat_3, dat_6, dat_3, dat_7, dat_2, dat_6, dat_5, dat_6, dat_5, dat_6, dat_e, alignment, dat_4, digits, dat_0, dat_1, dat_b, dat_0
 .db	define, digits, dat_0, dat_f, terminator, dat_6, dat_3, dat_6, dat_c, dat_6, dat_5, dat_6, dat_1, dat_7, dat_2, dat_5, dat_f, dat_7, dat_3, dat_6, dat_3, dat_7, dat_2, dat_6, dat_5, dat_6, dat_5, dat_6, dat_e, dat_5, dat_f, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, digits, dat_0, dat_1, dat_c, dat_2
-.db	define, digits, dat_1, dat_0, terminator, dat_7, dat_0, dat_7, dat_2, dat_6, dat_9, dat_6, dat_e, dat_7, dat_4, dat_5, dat_f, dat_6, dat_2, dat_7, dat_9, dat_7, dat_4, dat_6, dat_5, digits, dat_0, dat_3, dat_5, dat_0
-.db	define, digits, dat_1, dat_1, terminator, dat_6, dat_7, dat_6, dat_5, dat_7, dat_4, dat_5, dat_f, dat_6, dat_b, dat_6, dat_5, dat_7, dat_9, digits, dat_0, dat_2, dat_0, dat_0
+.db	define, digits, dat_1, dat_0, terminator, dat_7, dat_0, dat_7, dat_2, dat_6, dat_9, dat_6, dat_e, dat_7, dat_4, dat_5, dat_f, dat_6, dat_2, dat_7, dat_9, dat_7, dat_4, dat_6, dat_5, alignment, dat_6, digits, dat_0, dat_3, dat_5, dat_0
+.db	define, digits, dat_1, dat_1, terminator, dat_6, dat_7, dat_6, dat_5, dat_7, dat_4, dat_5, dat_f, dat_6, dat_b, dat_6, dat_5, dat_7, dat_9, alignment, dat_9, digits, dat_0, dat_2, dat_0, dat_0
 .db	empty
 .db	origin, digits, dat_8, dat_0, dat_0, dat_0
 .db	empty
-.db	call_nn, variable, digits, dat_0, dat_f
+.db	call_nn, reference, digits, dat_0, dat_f
 .db	empty
 .db	comment, dat_6, dat_4, dat_6, dat_9, dat_7, dat_3, dat_6, dat_1, dat_6, dat_2, dat_6, dat_c, dat_6, dat_5, dat_2, dat_0, dat_6, dat_8, dat_6, dat_9, dat_6, dat_7, dat_6, dat_8, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_7, dat_3, dat_2, dat_0, dat_6, dat_d, dat_6, dat_f, dat_6, dat_4, dat_6, dat_5
 .db	ld_r_n, a_reg, bin_number, dat_0, dat_0, dat_1, dat_1, dat_0, dat_0, dat_1, dat_1
-.db	out_n_a, variable, digits, dat_0, dat_0
+.db	out_n_a, reference, digits, dat_0, dat_0
 .db	end_

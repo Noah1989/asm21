@@ -84,6 +84,18 @@ retry:
 	INC HL
 	OR A
 	JR Z, retry
+	CP alignment
+	JR nz, noalign
+	LD A, (HL)
+	INC HL
+	SUB dat_0
+	LD B, A
+	LD A, ' '
+align_loop:
+	OUT chars_io, A
+	DJNZ align_loop
+	JR retry
+noalign:
 	PUSH HL
 	CALL print_name_A_ret_len_C_params_B_HL_trash_DE
 	POP DE ; source pointer

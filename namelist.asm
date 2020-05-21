@@ -391,9 +391,9 @@ entry math_op1,   "m", {h_const, expr}
 entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
-entry reference,  "*", {n_const} ; resolve label
-entry variable,   "=", {n_const} ; resolve define
+entry reference,  "*", {n_const} ; resolve label/define
 entry terminator, ";", {}
+entry alignment,  $1A, {h_const}
 
 placeholders equ last+1
 
