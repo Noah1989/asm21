@@ -47,7 +47,7 @@ entrypoint print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
 	JR first
 loop:
 	; print comma and space
-	LD A, $08
+	LD A, $18
 	OUT (color_io), A
 	LD A, ","
 	OUT (chars_io), A
@@ -102,7 +102,7 @@ hasparams:
 	JR first
 loop:
 	; print comma and space
-	LD A, $08
+	LD A, $18
 	OUT (color_io), A
 	LD A, ","
 	OUT (chars_io), A
@@ -185,7 +185,7 @@ entrypoint print_text_HL
 .block
 	LD C, 0
 loop:
-	LD A, $07
+	LD A, $17
 	OUT (color_io), A
 	LD A, (HL)
 	SUB dat_0
@@ -213,9 +213,11 @@ entrypoint print_digits_HL
 .block
 	LD C, 0
 loop:
-	LD A, $09
+	LD A, $19
 	OUT (color_io), A
 	LD A, (HL)
+	CP terminator
+	JR Z, terminated
 	SUB dat_0
 	RET C
 	INC HL
@@ -226,6 +228,9 @@ loop:
 	OUT (chars_io), A
 	INC C
 	JR loop
+terminated:
+	INC HL
+	RET
 .endblock
 
 ; Sets the color of the next character to be printed according to the
@@ -236,7 +241,7 @@ entrypoint print_color_A
 	PUSH BC
 	PUSH HL
 	LD HL, table
-	LD B, $10
+	LD B, $20
 loop:
 	DEC B
 	CP (HL)
@@ -263,7 +268,7 @@ entrypoint print_pstr_HL_trash_A
 	LD B, (HL)
 	INC HL
 next_char:
-	LD A, $0A
+	LD A, $1A
 	OUT (color_io),A
 	LD A, (HL)
 	INC HL

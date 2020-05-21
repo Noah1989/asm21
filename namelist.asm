@@ -392,7 +392,7 @@ entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
 entry reference,  "*", {n_const} ; resolve label
-entry varible,    "=", {n_const} ; resolve define
+entry variable,   "=", {n_const} ; resolve define
 entry terminator, ";", {}
 
 placeholders equ last+1
@@ -422,7 +422,7 @@ entry d_const,   "d", {} ; displacement, truncate to -128..+127 for index regist
 entry n_const,   "n", {} ; 8-bit const, truncate to $00..$FF
 entry nn_const, "nn", {} ; 16-bit const, truncate to $0000..$FFFF
 ; these even have variable data length
-entry text,       34, {} ; even number of data tokens
+entry text,       34, {text} ; even number of data tokens
 entry digits,    "$", {digits} ; hex number if not specified otherwise
 hex_number equ digits
 

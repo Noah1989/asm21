@@ -1,25 +1,25 @@
-gset2 equ $b2
+gset2 equ $b2 ; 00
 
-gaddr_l equ $b3
-gaddr_h equ $b4
+gaddr_l equ $b3 ; 01
+gaddr_h equ $b4 ; 02
 
-name    equ $b8
-color   equ $b9
-pattern equ $ba 
-palette equ $bb
+name    equ $b8 ; 03
+color   equ $b9 ; 04
+pattern equ $ba ; 05
+palette equ $bb ; 06
 
-name_inc    equ $bc
-color_inc   equ $bd
-pattern_inc equ $be 
-palette_inc equ $bf
+name_inc    equ $bc ; 07
+color_inc   equ $bd ; 08
+pattern_inc equ $be ; 09
+palette_inc equ $bf ; 0A
 
-init_graphics    equ $00d0
-load_palette     equ $00f0
-load_chars       equ $0150
-clear_screen     equ $01b0
-clear_screen_col equ $01c2
-print_byte       equ $0350
-get_key          equ $0200
+init_graphics    equ $00d0 ; 0B
+load_palette     equ $00f0 ; 0C
+load_chars       equ $0150 ; 0D
+clear_screen     equ $01b0 ; 0E
+clear_screen_col equ $01c2 ; 0F
+print_byte       equ $0350 ; 10
+get_key          equ $0200 ; 11
 
 org $8000
 
