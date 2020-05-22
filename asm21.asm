@@ -49,19 +49,28 @@ entrypoint init
 .block
 	LD	HL, input_main
 	LD	(input_table_pointer), HL
+
 	LD	HL, global_hints
 	LD	(hint_pointer), HL
+
+	LD	HL, source_buffer
+	LD	(listing_top_pointer), HL
+	LD	(active_line_pointer), HL
+
 	LD	A, 1
 	LD	(is_running), A
+
 	LD	A, -1
 	LD	(active_menu_entry), A
 	LD	(active_submenu_entry), A
+
 	LD	HL, active_submenu_store
 	LD	B, main_menu_count
 loop:
 	LD	(HL), A
 	INC	HL
 	DJNZ	loop
+
 	RET
 .endblock
 
@@ -103,7 +112,9 @@ hint_pointer:
 defs 2
 listing_top_pointer:
 defs 2
-current_line_pointer:
+active_line_pointer:
+defs 2
+code_colors_pointer:
 defs 2
 
 debug_align $1000
@@ -119,11 +130,11 @@ source_buffer:
 .db	define, digits, dat_0, dat_5, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, digits, dat_b, dat_a
 .db	define, digits, dat_0, dat_6, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, digits, dat_b, dat_b
 .db	empty
-.db	define, digits, dat_0, dat_7, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_3, digits, dat_b, dat_8
-.db	define, digits, dat_0, dat_8, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_2, digits, dat_b, dat_9
-.db	define, digits, dat_0, dat_9, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_a
-.db	define, digits, dat_0, dat_a, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_b
-.db	empty
+;.db	define, digits, dat_0, dat_7, terminator, dat_6, dat_e, dat_6, dat_1, dat_6, dat_d, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_3, digits, dat_b, dat_8
+;.db	define, digits, dat_0, dat_8, terminator, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, alignment, dat_2, digits, dat_b, dat_9
+;.db	define, digits, dat_0, dat_9, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_a
+;.db	define, digits, dat_0, dat_a, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_5, dat_f, dat_6, dat_9, dat_6, dat_e, dat_6, dat_3, digits, dat_b, dat_b
+;.db	empty
 .db	define, digits, dat_0, dat_b, terminator, dat_6, dat_9, dat_6, dat_e, dat_6, dat_9, dat_7, dat_4, dat_5, dat_f, dat_6, dat_7, dat_7, dat_2, dat_6, dat_1, dat_7, dat_0, dat_6, dat_8, dat_6, dat_9, dat_6, dat_3, dat_7, dat_3, alignment, dat_3, digits, dat_0, dat_0, dat_d, dat_0
 .db	define, digits, dat_0, dat_c, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, alignment, dat_4, digits, dat_0, dat_0, dat_f, dat_0
 .db	define, digits, dat_0, dat_d, terminator, dat_6, dat_c, dat_6, dat_f, dat_6, dat_1, dat_6, dat_4, dat_5, dat_f, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_7, dat_3, alignment, dat_6, digits, dat_0, dat_1, dat_5, dat_0

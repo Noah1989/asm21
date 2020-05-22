@@ -10,6 +10,8 @@ input_menu:
 .dw	menu_abort
 .db	$01 ; F9
 .dw	menu_abort
+.db	$09 ; F10
+.dw	menu_abort
 .db	$74 ; right arrow
 .dw	menu_right
 .db	$6B ; left arrow

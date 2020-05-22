@@ -45,7 +45,7 @@ entrypoint gui_menu_dropdown
 	LD	DE, 0
 	LD	HL, main_menu
 loop:
-	; find position
+	;	find position
 	XOR	A
 	LD	BC, $100
 	CPIR
@@ -69,7 +69,7 @@ found:
 	LD	D, (HL) ; width
 	INC	HL
 	LD	E, 1 ; top
-	; top
+	;	top
 	LD	A, E
 	OUT	gaddr_h, A
 	LD	A, C
@@ -83,7 +83,7 @@ found:
 	POP	HL
 	POP	BC
 loop2:
-	; body
+	;	body
 	INC	E
 	LD	A, E
 	OUT	gaddr_h, A
@@ -119,7 +119,7 @@ skip:
 	XOR	A
 	CP	(HL)
 	JR	NZ, loop2
-	; bottom
+	;	bottom
 	INC	E
 	LD	A, E
 	OUT	gaddr_h, A
@@ -161,7 +161,7 @@ entrypoint gui_editor_top
 	INC	A
 	OUT	gaddr_h, A
 	LD	HL, chars_editor_top
-	LD	C, color_editor
+	LD	C, color_editor_top
 	LD	B, 35
 	CALL	gui_line_color_C_chars_iHL_len_B
 	LD	HL, editor_title
@@ -169,27 +169,9 @@ entrypoint gui_editor_top
 	LD	B, 6
 	CALL	gui_print_highlight_str_iHL_maxlen_B_colors_C_D
 	LD	HL, chars_editor_top+3
-	LD	C, color_editor
+	LD	C, color_editor_top
 	LD	B, 35
 	JP	gui_line_color_C_chars_iHL_len_B
-.endblock
-
-entrypoint gui_editor_frame
-.block
-	LD	D, 2
-loop:
-	XOR	A
-	OUT	gaddr_l, A
-	LD	A, D
-	OUT	gaddr_h, A
-	LD	C, color_editor
-	LD	HL, chars_editor_frame
-	CALL	gui_line_color_C_chars_iHL
-	INC	D
-	LD	A, D
-	CP	29
-	JR	C, loop
-	RET
 .endblock
 
 entrypoint gui_statusbar

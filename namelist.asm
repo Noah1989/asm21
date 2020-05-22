@@ -315,8 +315,8 @@ nospace equ last+1
 ; pseudo-instructions
 pseudo_instructions equ last+1
 entry origin,    "@", {nn_const}
-entry label,     ".", {n_const, text}
-entry define,    ":", {n_const, text, expr}
+entry label,     ":", {n_const, text}
+entry define,    "=", {n_const, text, expr}
 entry data,      "'", {expr}
 entry comment,   "!", {text}
 entry empty,     " ", {}

@@ -15,7 +15,7 @@ next_line:
 	JR Z, emptyline
 	CALL print_pstr_HL_trash_A
 emptyline:
-	CALL fill_right_30_txtlen_C_trash_A_C
+	;CALL fill_right_30_txtlen_C_trash_A_C
 	INC D
 	DJNZ next_line
 	RET
@@ -38,7 +38,7 @@ next_line:
 	PUSH DE
 	LD C, 0
 	CALL C, print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
-	CALL fill_right_30_txtlen_C_trash_A_C
+	;CALL fill_right_30_txtlen_C_trash_A_C
 	POP DE
 	POP BC
 	INC B
