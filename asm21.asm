@@ -152,4 +152,30 @@ source_buffer:
 .db	comment, dat_6, dat_4, dat_6, dat_9, dat_7, dat_3, dat_6, dat_1, dat_6, dat_2, dat_6, dat_c, dat_6, dat_5, dat_2, dat_0, dat_6, dat_8, dat_6, dat_9, dat_6, dat_7, dat_6, dat_8, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_7, dat_3, dat_2, dat_0, dat_6, dat_d, dat_6, dat_f, dat_6, dat_4, dat_6, dat_5
 .db	ld_r_n, a_reg, bin_number, dat_0, dat_0, dat_1, dat_1, dat_0, dat_0, dat_1, dat_1
 .db	out_n_a, reference, digits, dat_0, dat_0
+.db	empty
+.db	comment, dat_6, dat_6, dat_6, dat_9, dat_6, dat_c, dat_6, dat_c, dat_2, dat_0, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_6, dat_e, dat_7, dat_3, dat_2, dat_0, dat_2, dat_4, dat_3, dat_0, dat_3, dat_0, dat_2, dat_e, dat_2, dat_e, dat_2, dat_4, dat_3, dat_0, dat_6, dat_6, dat_2, dat_0, dat_7, dat_7, dat_6, dat_9, dat_7, dat_4, dat_6, dat_8, dat_2, dat_0, dat_7, dat_3, dat_6, dat_9, dat_6, dat_e, dat_6, dat_7, dat_6, dat_c, dat_6, dat_5, dat_2, dat_0, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2
+.db	xor_a_r, a_reg
+.db	out_n_a, reference, digits, dat_0, dat_1
+.db	out_n_a, reference, digits, dat_0, dat_2
+.db	label, digits, dat_1, dat_2, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_5, dat_f, dat_6, dat_2, dat_6, dat_9, dat_6, dat_7, dat_6, dat_c, dat_6, dat_f, dat_6, dat_f, dat_7, dat_0
+.db	ld_r_n, b_reg, dec_number, dat_3, dat_2
+.db	label, digits, dat_1, dat_3, terminator, dat_7, dat_0, dat_6, dat_1, dat_7, dat_4, dat_5, dat_f, dat_6, dat_c, dat_6, dat_f, dat_6, dat_f, dat_7, dat_0
+.db	out_n_a, reference, digits, dat_0, dat_9
+.db	djnz_, reference, digits, dat_1, dat_3
+.db	add_a_n, digits, dat_1, dat_1
+.db	jr_cr_d, nc_flag, reference, digits, dat_1, dat_2
+.db	empty
+.db	comment, dat_6, dat_6, dat_6, dat_9, dat_6, dat_c, dat_6, dat_c, dat_2, dat_0, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_7, dat_3, dat_2, dat_0, dat_2, dat_4, dat_3, dat_0, dat_3, dat_0, dat_2, dat_e, dat_2, dat_e, dat_2, dat_4, dat_3, dat_0, dat_6, dat_6, dat_2, dat_0, dat_7, dat_7, dat_6, dat_9, dat_7, dat_4, dat_6, dat_8, dat_2, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_c, dat_2, dat_0, dat_7, dat_0, dat_6, dat_f, dat_7, dat_3, dat_7, dat_3, dat_6, dat_9, dat_6, dat_2, dat_6, dat_c, dat_6, dat_5, dat_2, dat_0, dat_6, dat_3, dat_6, dat_f, dat_6, dat_c, dat_6, dat_f, dat_7, dat_2, dat_7, dat_3
+.db	xor_a_r, a_reg
+.db	out_n_a, reference, digits, dat_0, dat_1
+.db	out_n_a, reference, digits, dat_0, dat_2
+.db	label, digits, dat_1, dat_4, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_5, dat_f, dat_6, dat_c, dat_6, dat_f, dat_6, dat_f, dat_7, dat_0
+.db	out_n_a, reference, digits, dat_0, dat_a
+.db	inc_r, a_reg
+.db	jr_cr_d, nz_flag, reference, digits, dat_1, dat_4
+.db	empty
+.db	comment, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_2, dat_0, dat_2, dat_4, dat_3, dat_1, dat_3, dat_0, dat_2, dat_0, dat_6, dat_6, dat_6, dat_f, dat_7, dat_2, dat_2, dat_0, dat_7, dat_4, dat_6, dat_f, dat_7, dat_0, dat_2, dat_0, dat_6, dat_8, dat_6, dat_1, dat_6, dat_c, dat_6, dat_6, dat_2, dat_0, dat_6, dat_f, dat_6, dat_6, dat_2, dat_0, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_6, dat_1, dat_6, dat_3, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_7, dat_3
+.db	ld_r_n, b_reg, dat_8
+.db	label, digits, dat_1, dat_5, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_5, dat_f, dat_7, dat_4, dat_6, dat_f, dat_7, dat_0, dat_5, dat_f, dat_6, dat_c, dat_6, dat_f, dat_6, dat_f, dat_7, dat_0
+.db	empty
 .db	end_

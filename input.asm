@@ -7,6 +7,10 @@ input_main:
 .dw	editor_down;
 .db	$75 ; up arrow
 .dw	editor_up;
+.db	$7A ; page down
+.dw	editor_down_page;
+.db	$7D ; page up
+.dw	editor_up_page;
 .db	0
 
 input_menu:

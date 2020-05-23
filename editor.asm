@@ -1,3 +1,5 @@
+scroll_lines equ 26
+
 entrypoint editor_redraw
 .block
 	CALL	gui_editor_top
@@ -6,6 +8,11 @@ entrypoint editor_redraw
 
 entrypoint editor_down
 .block
+	LD	B, 1
+	JR	go
+@editor_down_page:
+	LD	B, scroll_lines
+go:
 	LD	HL, (active_line_pointer)
 loop:
 	INC	HL
@@ -13,12 +20,12 @@ loop:
 	CP	inlines
 	JR	NC, loop
 	CP	end_
-	RET	Z
+	JR	Z, end
 	LD	(active_line_pointer), HL
 	LD	DE, (listing_bottom_pointer)
 	AND	A
 	SBC	HL, DE
-	JR	C, print_source
+	JR	C, end
 	;	scroll down
 	LD	HL, (listing_top_pointer)
 loop2:
@@ -27,16 +34,23 @@ loop2:
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
+end:
+	DJNZ	go
 	JR	print_source
 .endblock
 
 entrypoint editor_up
 .block
+	LD	B, 1
+	JR	go
+@editor_up_page:
+	LD	B, scroll_lines
+go:
 	LD	HL, (active_line_pointer)
 	LD	DE, source_buffer
 	AND	A ; clear carry
 	SBC	HL, DE
-	RET	Z
+	JR	Z, end
 	ADD	HL, DE
 loop:
 	DEC	HL
@@ -47,7 +61,7 @@ loop:
 	LD	DE, (listing_top_pointer)
 	AND	A
 	SBC	HL, DE
-	JR	NC, print_source
+	JR	NC, end
 	;	scroll up
 	LD	HL, (listing_top_pointer)
 loop2:
@@ -56,6 +70,8 @@ loop2:
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
+end:
+	DJNZ	go
 	JR	print_source
 .endblock
 

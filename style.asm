@@ -30,18 +30,18 @@ chars_scrollbar:
 colors_editor:
 .db	$18 ; separators
 .db	$17 ; text
-.db	$1E ; numbers, raw nibbles
+.db	$1C ; numbers, raw nibbles
 .db	$1F ; expressions / placeholders
 .db	$1D ; flags
-.db	$1C ; registers / indirect memory / rst targets
+.db	$1E ; registers / indirect memory / rst targets
 .db	$1B ; pseudo instructions
 .db	$1A ; instructions
 colors_editor_active:
 .db	$98 ; separators
 .db	$97 ; text
-.db	$9E ; numbers, raw nibbles
+.db	$9C ; numbers, raw nibbles
 .db	$9F ; expressions / placeholders
 .db	$9D ; flags
-.db	$9C ; registers / indirect memory / rst targets
+.db	$9E ; registers / indirect memory / rst targets
 .db	$9B ; pseudo instructions
 .db	$9A ; instructions
