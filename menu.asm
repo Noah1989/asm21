@@ -103,7 +103,7 @@ entrypoint menu_up
 .block
 	LD	A, (active_submenu_entry)
 	AND	A
-	RET	M
+	JP	M, menu_abort
 	DEC	A
 	LD	(active_submenu_entry), A
 	JP	M, editor_redraw

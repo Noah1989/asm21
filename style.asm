@@ -10,7 +10,7 @@ color_menu_dropdown_shadow equ $08
 color_editor_top           equ $17
 color_editor_left          equ $17
 color_editor_title         equ $1F
-color_editor_scrollbar     equ $70
+color_editor_scrollbar     equ $78
 color_statusbar            equ $3F
 color_statusbar_highlight  equ $3E
 color_statusbar_info       equ $30
@@ -25,7 +25,7 @@ chars_menu_dropdown_frame:
 chars_menu_dropdown_bottom:
 .db	$C0, $C4, $D9
 chars_scrollbar:
-.db	$18, $19, $B1, $20
+.db	$18, $19, $DB, $B1
 
 colors_editor:
 .db	$18 ; separators
