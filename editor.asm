@@ -15,6 +15,18 @@ loop:
 	CP	end_
 	RET	Z
 	LD	(active_line_pointer), HL
+	LD	DE, (listing_bottom_pointer)
+	AND	A
+	SBC	HL, DE
+	JR	C, print_source
+	;	scroll down
+	LD	HL, (listing_top_pointer)
+loop2:
+	INC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	NC, loop2
+	LD	(listing_top_pointer), HL
 	JR	print_source
 .endblock
 
@@ -32,6 +44,18 @@ loop:
 	CP	inlines
 	JR	NC, loop
 	LD	(active_line_pointer), HL
+	LD	DE, (listing_top_pointer)
+	AND	A
+	SBC	HL, DE
+	JR	NC, print_source
+	;	scroll up
+	LD	HL, (listing_top_pointer)
+loop2:
+	DEC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	NC, loop2
+	LD	(listing_top_pointer), HL
 	JR	print_source
 .endblock
 
@@ -90,5 +114,6 @@ scrollbar_ok:
 	LD	A, D
 	CP	29
 	JR	C, next_line
+	LD	(listing_bottom_pointer), HL
 	RET
 .endblock

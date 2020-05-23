@@ -114,6 +114,8 @@ listing_top_pointer:
 defs 2
 active_line_pointer:
 defs 2
+listing_bottom_pointer:
+defs 2
 code_colors_pointer:
 defs 2
 
