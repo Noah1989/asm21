@@ -4,6 +4,37 @@ entrypoint editor_redraw
 	JP	print_source
 .endblock
 
+entrypoint editor_down
+.block
+	LD	HL, (active_line_pointer)
+loop:
+	INC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	NC, loop
+	CP	end_
+	RET	Z
+	LD	(active_line_pointer), HL
+	JR	print_source
+.endblock
+
+entrypoint editor_up
+.block
+	LD	HL, (active_line_pointer)
+	LD	DE, source_buffer
+	AND	A ; clear carry
+	SBC	HL, DE
+	RET	Z
+	ADD	HL, DE
+loop:
+	DEC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	NC, loop
+	LD	(active_line_pointer), HL
+	JR	print_source
+.endblock
+
 entrypoint print_source
 .block
 	LD	D, 2

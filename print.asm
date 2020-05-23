@@ -1,6 +1,7 @@
 color_io  equ $B9 ; GPU color table
 chars_io  equ $BC ; GPU name table with auto increment
 color_inc equ $BD ; GPU color table with auto increment
+chars_ni  equ $B8 ; name table, without auto increment
 
 ; Finds and prints the name of the bytecode token in A.
 ; Returns number of characters printed in C
@@ -224,8 +225,6 @@ entrypoint print_text_HL_return_len_C_trash_A_B_DE
 	LD	DE, (code_colors_pointer)
 	INC	DE
 loop:
-	LD	A, (DE)
-	OUT	(color_io), A
 	LD	A, (HL)
 	SUB	dat_0
 	RET	C
@@ -240,7 +239,9 @@ loop:
 	JR	C, halfbyte
 	INC	HL
 	ADD	A, B
-	OUT	(chars_io), A
+	OUT	(chars_ni), A
+	LD	A, (DE)
+	OUT	(color_inc), A
 	INC	C
 	JR	loop
 halfbyte:
@@ -255,8 +256,6 @@ entrypoint print_digits_HL_return_len_C_trash_A_DE
 	INC	DE
 	INC	DE
 loop:
-	LD	A, (DE)
-	OUT	(color_io), A
 	LD	A, (HL)
 	CP	terminator
 	JR	Z, terminated
@@ -267,7 +266,9 @@ loop:
 	DAA
 	ADC	A, $40
 	DAA
-	OUT	(chars_io), A
+	OUT	(chars_ni), A
+	LD	A, (DE)
+	OUT	(color_inc), A
 	INC	C
 	JR	loop
 terminated:

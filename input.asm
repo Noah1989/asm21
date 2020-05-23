@@ -3,6 +3,10 @@ input_main:
 .dw	menu_activate
 .db	$09 ; F10
 .dw	quit
+.db	$72 ; down arrow
+.dw	editor_down;
+.db	$75 ; up arrow
+.dw	editor_up;
 .db	0
 
 input_menu:
