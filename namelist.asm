@@ -42,6 +42,9 @@ namelist:
 ; |     Parameter list contains instruction operands.
 ; |     Operands can be registers, indirect memory, flags, RST addresses
 ; |     as well as placeholders
+; +-- pseudo instructions
+; |     Origin, labels, defines, data, comments, empty lines, end marker.
+; |     Paramater list describes operands/content, if applicable
 ; +-- Registers:
 ; |     No parameters
 ; +-- Indirect memory:
@@ -59,14 +62,12 @@ namelist:
 ;       Fully specified using a variable length expression from source.
 ;       There are different expression placeholders depending on the
 ;       width and signedness of the required value.
-;       No parameters.
-;
-; TODO: Lables, Comments, Indents...
-;
+;       No parameters, except if doubling as expression primitives (see below)
+
 ; # Expression building blocks
 ; +-- Expression primitives:
 ; |     Are used to build expressions, might consume data from source.
-; |     No parameters.
+; |     Parameters describe type of data needed from source
 ; '-- Data
 ;       16 tokens to encode 4 bits of data per byte
 
@@ -414,7 +415,7 @@ entry p_choice,             "p", {p00, p08, p10, p18, p20, p28, p30, p38}
 ; Expression placeholders:
 ; These mark a place where an expression needs to be provided from the source,
 ; and how it will be interpreted.
-entry expr,      "e", {b_const, h_const, d_const, n_const, nn_const, text, digits}
+entry expr,      "e", {} ; generic expression placeholder
 entry b_const,   "b", {} ; bit number, truncate to 0..7
 entry h_const,   "h", {} ; half byte, truncate to $0..$F
 ; placeholders below require multiple data bytes from source
@@ -422,6 +423,7 @@ entry d_const,   "d", {} ; displacement, truncate to -128..+127 for index regist
 entry n_const,   "n", {} ; 8-bit const, truncate to $00..$FF
 entry nn_const, "nn", {} ; 16-bit const, truncate to $0000..$FFFF
 ; these even have variable data length
+; these are also used as their own expression primitives in the source
 entry text,       34, {text} ; even number of data tokens
 entry digits,    "$", {digits} ; hex number if not specified otherwise
 hex_number equ digits
