@@ -25,7 +25,7 @@ chars_menu_dropdown_frame:
 chars_menu_dropdown_bottom:
 .db	$C0, $C4, $D9
 chars_scrollbar:
-.db	$18, $19, $B1
+.db	$18, $19, $B1, $20
 
 colors_editor:
 .db	$18 ; separators

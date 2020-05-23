@@ -34,6 +34,8 @@ entrypoint asm21
 	CALL	init
 	CALL	gui_menubar
 	CALL	gui_statusbar
+	CALL	count_lines
+	CALL	calc_scrollbar
 	CALL	editor_redraw
 loop:
 	CALL	input_handler
@@ -57,6 +59,10 @@ entrypoint init
 	LD	(listing_top_pointer), HL
 	LD	(active_line_pointer), HL
 
+	LD	HL, 0
+	LD	(line_listing_top), HL
+	LD	(line_active), HL
+
 	LD	A, 1
 	LD	(is_running), A
 
@@ -74,6 +80,26 @@ loop:
 	RET
 .endblock
 
+entrypoint count_lines
+.block
+	LD	HL, source_buffer
+	LD	DE, 0
+	LD	A, (HL)
+loop:
+	CP	end_
+	JR	Z, end
+	INC	DE
+loop2:
+	INC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	NC, loop2
+	JR	loop
+end:
+	LD	(line_count), DE
+	RET
+.endblock
+
 entrypoint quit
 .block
 	XOR	A
@@ -81,6 +107,7 @@ entrypoint quit
 	RET
 .endblock
 
+.include math.asm
 .include namelist.asm
 .include find.asm
 .include input.asm
@@ -118,6 +145,16 @@ listing_bottom_pointer:
 defs 2
 code_colors_pointer:
 defs 2
+line_count:
+defs 2
+line_listing_top:
+defs 2
+line_active:
+defs 2
+scrollbar_top:
+defs 1
+scrollbar_bottom:
+defs 1
 
 debug_align $1000
 .align $1000

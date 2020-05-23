@@ -22,6 +22,9 @@ loop:
 	CP	end_
 	JR	Z, end
 	LD	(active_line_pointer), HL
+	LD	DE, (line_active)
+	INC	DE
+	LD	(line_active), DE
 	LD	DE, (listing_bottom_pointer)
 	AND	A
 	SBC	HL, DE
@@ -34,8 +37,12 @@ loop2:
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
+	LD	DE, (line_listing_top)
+	INC	DE
+	LD	(line_listing_top), DE
 end:
 	DJNZ	go
+	CALL	calc_scrollbar
 	JR	print_source
 .endblock
 
@@ -58,6 +65,9 @@ loop:
 	CP	inlines
 	JR	NC, loop
 	LD	(active_line_pointer), HL
+	LD	DE, (line_active)
+	DEC	DE
+	LD	(line_active), DE
 	LD	DE, (listing_top_pointer)
 	AND	A
 	SBC	HL, DE
@@ -70,8 +80,12 @@ loop2:
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
+	LD	DE, (line_listing_top)
+	DEC	DE
+	LD	(line_listing_top), DE
 end:
 	DJNZ	go
+	CALL	calc_scrollbar
 	JR	print_source
 .endblock
 
@@ -119,6 +133,15 @@ skip:
 	CP	28
 	JR	Z, scrollbar_ok
 	INC	HL
+	LD	A, (scrollbar_top)
+	DEC	A
+	CP	D
+	JR	NC, scrollbar_ok
+	INC	HL
+	LD	A, (scrollbar_bottom)
+	CP	D
+	JR	NC, scrollbar_ok
+	DEC	HL
 scrollbar_ok:
 	LD	A, color_editor_scrollbar
 	OUT	(color_io), A
@@ -131,5 +154,51 @@ scrollbar_ok:
 	CP	29
 	JR	C, next_line
 	LD	(listing_bottom_pointer), HL
+	RET
+.endblock
+
+entrypoint calc_scrollbar
+.block
+	LD	A, (line_count+1)
+	AND	A
+	JR	NZ, go
+	LD	A, (line_count)
+	CP	27
+	JR	NC, go
+	;	no scrolling
+	XOR	A
+	LD	(scrollbar_top), A
+	LD	(scrollbar_bottom), A
+	RET
+go:
+	LD	DE, (line_listing_top)
+	CALL	calc
+	ADD	A, 3
+	LD	(scrollbar_top), A
+	LD	HL, (line_count)
+	LD	DE, -27
+	ADD	HL, DE
+	EX	DE, HL
+	CALL	calc
+	SUB	24
+	NEG
+	LD	HL, scrollbar_top
+	ADD	A, (HL)
+	LD	(scrollbar_bottom), A
+	RET
+calc:
+	LD	A, 24
+	CALL	mult_A_DE_result_AHL_trash_BC
+	LD	C, L
+	LD	B, H
+	LD	DE, (line_count)
+	DEC	DE
+	CALL	div_ABC_DE_result_HL_remainder_DE_trash_AF_BC_IX_IYL
+	;	round up
+	LD	A, D
+	OR	E
+	ADD	A, $FF
+	LD	A, L
+	ADC	A, 0
 	RET
 .endblock
