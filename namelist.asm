@@ -310,16 +310,13 @@ entry IM_2,        "", {dat_2}
 
 last_instruction equ last
 
-; tokens below do not need a space after the name when printing
-nospace equ last+1
-
 ; pseudo-instructions
 pseudo_instructions equ last+1
 entry origin,    "@", {nn_const}
 entry label,     ":", {n_const, text}
 entry define,    "=", {n_const, text, expr}
 entry data,      "'", {expr}
-entry comment,   "!", {text}
+entry comment,  "//", {text}
 entry empty,     " ", {}
 entry end_,       "", {}
 
@@ -394,7 +391,7 @@ entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
 entry reference,  "*", {n_const} ; resolve label/define
 entry terminator, ";", {}
-entry alignment,  $1A, {h_const}
+entry alignment,  $1A, {h_const} ; used to visually align source, no effect
 
 placeholders equ last+1
 

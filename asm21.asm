@@ -155,6 +155,8 @@ scrollbar_top:
 defs 1
 scrollbar_bottom:
 defs 1
+expression_buffer:
+defs 8
 
 debug_align $1000
 .align $1000

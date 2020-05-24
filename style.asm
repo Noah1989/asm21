@@ -16,6 +16,9 @@ color_statusbar_highlight  equ $3E
 color_statusbar_info       equ $30
 color_statusbar_info2      equ $31
 
+instruction_indent equ 2
+instruction_align  equ 8
+
 chars_editor_top:
 .db	$D5, $CD, $20, $20, $CD, $B8
 chars_menu_dropdown_top:

@@ -112,26 +112,113 @@ align_loop:
 	LD	C, A
 	RET
 noalign:
+	CP	label
+	JR	NZ, nolabel
+print_label:
+	LD	DE, expression_buffer
+	CALL	eval_expression_HL_write_DE
+	CALL	print_text_HL_return_len_C_trash_A_B_DE
+	PUSH	BC
+	PUSH	HL
+	LD	A, label
+	CALL	print_name_A_ret_len_C_params_B_HL_trash_DE
+	POP	HL
+	POP	BC
+	INC	C
+	RET
+nolabel:
+	CP	define
+	JR	NZ, nodefine
+print_define:
+	LD	DE, expression_buffer
+	CALL	eval_expression_HL_write_DE
+	CALL	print_text_HL_return_len_C_trash_A_B_DE
+	LD	A, (HL)
+	CP	alignment
+	LD	A, 1
+	JR	NZ, print_define_noalign
+	INC	HL
+	ADD	A, (HL)
+	INC	HL
+	SUB	dat_0
+print_define_noalign:
+	LD	B, A
+	ADD	A, C
+	LD	C, A
+print_define_align_loop:
+	LD	DE, (code_colors_pointer)
+	LD	A, (DE)
+	OUT	color_io, A
+	LD	A, ' '
+	OUT	chars_io, A
+	DJNZ	print_define_align_loop
+	PUSH	BC
+	PUSH	HL
+	LD	A, define
+	CALL	print_name_A_ret_len_C_params_B_HL_trash_DE
+	LD	DE, (code_colors_pointer)
+	LD	A, (DE)
+	OUT	color_io, A
+	LD	A, ' '
+	OUT	chars_io, A
+	POP	HL
+	CALL	print_source_HL_return_count_C_trash_A_B_DE
+	POP	DE
+	LD	A, C
+	ADD	A, E
+	ADD	A, 2
+	LD	C, A
+	RET
+nodefine:
+	LD	B, 0
+	CP	last_instruction+1
+	JR	NC, noinstruction
+	LD	C, A
+	LD	B, instruction_indent
+	LD	DE, (code_colors_pointer)
+instruction_indent_loop:
+	LD	A, (DE)
+	OUT	(color_io), A
+	LD	A, " "
+	OUT	(chars_io), A
+	DJNZ	instruction_indent_loop
+	LD	A, C
+	LD	B, instruction_indent
+noinstruction:
+	PUSH	AF
+	PUSH	BC
 	PUSH	HL
 	CALL	print_name_A_ret_len_C_params_B_HL_trash_DE
 	POP	DE ; source pointer
 	EX	DE, HL ; result: DE = *params, HL = *source
+	;	character count
+	POP	AF
+	ADD	A, C
+	LD	C, A
+	POP	AF
 	;	check if no params
 	INC	B
 	DJNZ	hasparams
 	RET
 hasparams:
-	CP	nospace
+	CP	last_instruction+1
 	JR	NC, first
-	;	separator
+	PUSH	BC
 	PUSH	DE
+	;	align after instruction
+	LD	A, instruction_align
+	SUB	C
+	LD	B, A
 	LD	DE, (code_colors_pointer)
+instruction_align_loop:
 	LD	A, (DE)
-	POP	DE
 	OUT	(color_io), A
 	LD	A, " "
 	OUT	(chars_io), A
-	INC	C
+	DJNZ	instruction_align_loop
+	POP	DE
+	POP	BC
+	LD	C, instruction_align
 	JR	first
 loop:
 	;	print comma and space

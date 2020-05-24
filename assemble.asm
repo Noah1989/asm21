@@ -487,6 +487,8 @@ eval_hex_number_HL_write_DE:
 	EX DE, HL; now: DE=*source HL=*result
 loop:
 	LD A, (DE)
+	CP terminator
+	JR Z, terminated
 	SUB dat_0
 	JR C, done
 	INC DE
@@ -495,6 +497,8 @@ loop:
 	RLD
 	DEC HL
 	JR loop
+terminated:
+	INC DE
 done:
 	EX DE, HL
 	INC DE
@@ -506,6 +510,8 @@ eval_bin_number_HL_write_DE:
 	LD BC, 0
 loop:
 	LD A, (HL)
+	CP terminator
+	JR Z, terminated
 	SUB dat_0
 	JR C, done
 	INC HL
@@ -513,6 +519,8 @@ loop:
 	RL C
 	RL B
 	JR loop
+terminated:
+	INC HL
 done:
 	LD A, C
 	LD (DE), A
