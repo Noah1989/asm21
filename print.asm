@@ -52,6 +52,7 @@ entrypoint print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
 loop:
 	;	print comma and space
 	LD	DE, (code_colors_pointer)
+	INC	DE
 	LD	A, (DE)
 	OUT	(color_io), A
 	LD	A, ","
@@ -117,7 +118,8 @@ noalign:
 print_label:
 	LD	DE, expression_buffer
 	CALL	eval_expression_HL_write_DE
-	CALL	print_text_HL_return_len_C_trash_A_B_DE
+	LD	DE, (code_colors_pointer)
+	CALL	print_text_HL_color_iDE_return_len_C_trash_A_B_DE
 	PUSH	BC
 	PUSH	HL
 	LD	A, label
@@ -132,7 +134,8 @@ nolabel:
 print_define:
 	LD	DE, expression_buffer
 	CALL	eval_expression_HL_write_DE
-	CALL	print_text_HL_return_len_C_trash_A_B_DE
+	LD	DE, (code_colors_pointer)
+	CALL	print_text_HL_color_iDE_return_len_C_trash_A_B_DE
 	LD	A, (HL)
 	CP	alignment
 	LD	A, 1
@@ -170,6 +173,43 @@ print_define_align_loop:
 	LD	C, A
 	RET
 nodefine:
+	CP	reference
+	JR	NZ, noreference
+print_reference:
+	PUSH	HL
+	LD	DE, expression_buffer
+	CALL	eval_expression_HL_write_DE
+	POP	DE
+	PUSH	HL
+	LD	A, (expression_buffer)
+	LD	B, A
+	LD	HL, source_buffer
+print_reference_search:
+	LD	A, (HL)
+	INC	HL
+	CP	end_
+	JR	Z, print_reference_fail
+	CP	label
+	JR	Z, print_reference_check
+	CP	define
+	JR	NZ, print_reference_search
+print_reference_check:
+	LD	DE, expression_buffer
+	PUSH	BC
+	CALL	eval_expression_HL_write_DE
+	POP	BC
+	LD	A, (expression_buffer)
+	CP	B
+	JR	NZ, print_reference_search
+print_reference_found:
+	LD	DE, (code_colors_pointer)
+	CALL	print_text_HL_color_iDE_return_len_C_trash_A_B_DE
+	POP	HL
+	RET
+print_reference_fail:
+	LD	A, reference
+	POP	HL
+noreference:
 	LD	B, 0
 	CP	last_instruction+1
 	JR	NC, noinstruction
@@ -224,6 +264,7 @@ loop:
 	;	print comma and space
 	PUSH	DE
 	LD	DE, (code_colors_pointer)
+	INC	DE
 	LD	A, (DE)
 	OUT	(color_io), A
 	LD	A, ","
@@ -308,9 +349,10 @@ done:
 
 entrypoint print_text_HL_return_len_C_trash_A_B_DE
 .block
-	LD	C, 0
 	LD	DE, (code_colors_pointer)
 	INC	DE
+@print_text_HL_color_iDE_return_len_C_trash_A_B_DE:
+	LD	C, 0
 loop:
 	LD	A, (HL)
 	SUB	dat_0

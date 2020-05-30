@@ -31,8 +31,8 @@ chars_scrollbar:
 .db	$18, $19, $DB, $B1
 
 colors_editor:
-.db	$18 ; separators
-.db	$17 ; text
+.db	$1F ; labels, defines, references
+.db	$17 ; text, comments
 .db	$1C ; numbers, raw nibbles
 .db	$1F ; expressions / placeholders
 .db	$1D ; flags
@@ -40,8 +40,8 @@ colors_editor:
 .db	$1B ; pseudo instructions
 .db	$1A ; instructions
 colors_editor_active:
-.db	$98 ; separators
-.db	$97 ; text
+.db	$9F ; labels, defines, references
+.db	$97 ; text, comments
 .db	$9C ; numbers, raw nibbles
 .db	$9F ; expressions / placeholders
 .db	$9D ; flags

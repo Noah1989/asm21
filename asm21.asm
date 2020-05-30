@@ -216,5 +216,6 @@ source_buffer:
 .db	comment, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_6, dat_5, dat_7, dat_4, dat_7, dat_4, dat_6, dat_5, dat_2, dat_0, dat_2, dat_4, dat_3, dat_1, dat_3, dat_0, dat_2, dat_0, dat_6, dat_6, dat_6, dat_f, dat_7, dat_2, dat_2, dat_0, dat_7, dat_4, dat_6, dat_f, dat_7, dat_0, dat_2, dat_0, dat_6, dat_8, dat_6, dat_1, dat_6, dat_c, dat_6, dat_6, dat_2, dat_0, dat_6, dat_f, dat_6, dat_6, dat_2, dat_0, dat_6, dat_3, dat_6, dat_8, dat_6, dat_1, dat_7, dat_2, dat_6, dat_1, dat_6, dat_3, dat_7, dat_4, dat_6, dat_5, dat_7, dat_2, dat_7, dat_3
 .db	ld_r_n, b_reg, dat_8
 .db	label, digits, dat_1, dat_5, terminator, dat_7, dat_0, dat_6, dat_1, dat_6, dat_c, dat_5, dat_f, dat_7, dat_4, dat_6, dat_f, dat_7, dat_0, dat_5, dat_f, dat_6, dat_c, dat_6, dat_f, dat_6, dat_f, dat_7, dat_0
+
 .db	empty
 .db	end_
