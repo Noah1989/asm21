@@ -17,6 +17,8 @@ go:
 loop:
 	INC	HL
 	LD	A, (HL)
+	AND	A
+	JR	Z, loop
 	CP	inlines
 	JR	NC, loop
 	CP	end_
@@ -34,6 +36,8 @@ loop:
 loop2:
 	INC	HL
 	LD	A, (HL)
+	AND	A
+	JR	Z, loop2
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
@@ -62,6 +66,8 @@ go:
 loop:
 	DEC	HL
 	LD	A, (HL)
+	AND	A
+	JR	Z, loop
 	CP	inlines
 	JR	NC, loop
 	LD	(active_line_pointer), HL
@@ -77,6 +83,8 @@ loop:
 loop2:
 	DEC	HL
 	LD	A, (HL)
+	AND	A
+	JR	Z, loop2
 	CP	inlines
 	JR	NC, loop2
 	LD	(listing_top_pointer), HL
@@ -89,11 +97,49 @@ end:
 	JR	print_source
 .endblock
 
+entrypoint editor_delete_after
+.block
+	LD	HL, (active_line_pointer)
+	LD	B, 0
+loop:
+	LD	(HL), B
+loop2:
+	INC	HL
+	LD	A, (HL)
+	AND	A
+	JR	Z, loop2
+	CP	inlines
+	JR	NC, loop
+	LD	(active_line_pointer), HL
+	JR	print_source
+.endblock
+
+entrypoint editor_delete_before
+.block
+	LD	HL, (active_line_pointer)
+	LD	B, 0
+loop:
+	DEC	HL
+	LD	A, (HL)
+	AND	A
+	JR	Z, loop
+	LD	(HL), B
+	CP	inlines
+	JR	NC, loop
+	JR	print_source
+.endblock
+
 entrypoint print_source
 .block
 	LD	D, 2
 	LD	HL, (listing_top_pointer)
+	DEC	HL
+retry:
+	INC	HL
 next_line:
+	LD	A, (HL)
+	AND	A
+	JR	Z, retry
 	PUSH	DE
 	PUSH	HL
 	LD	DE, colors_editor

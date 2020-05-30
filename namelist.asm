@@ -390,7 +390,7 @@ entry math_op2,   "M", {h_const, expr, expr}
 entry dec_number, "#", {digits}
 entry bin_number, "%", {digits}
 entry reference,  "*", {n_const} ; resolve label/define
-entry terminator, ";", {}
+entry terminator, ".", {}
 entry alignment,  $1A, {h_const} ; used to visually align source, no effect
 
 placeholders equ last+1

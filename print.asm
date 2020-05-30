@@ -179,7 +179,6 @@ print_reference:
 	PUSH	HL
 	LD	DE, expression_buffer
 	CALL	eval_expression_HL_write_DE
-	POP	DE
 	PUSH	HL
 	LD	A, (expression_buffer)
 	LD	B, A
@@ -205,9 +204,11 @@ print_reference_found:
 	LD	DE, (code_colors_pointer)
 	CALL	print_text_HL_color_iDE_return_len_C_trash_A_B_DE
 	POP	HL
+	POP	DE
 	RET
 print_reference_fail:
 	LD	A, reference
+	POP	DE
 	POP	HL
 noreference:
 	LD	B, 0

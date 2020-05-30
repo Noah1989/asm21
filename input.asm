@@ -11,6 +11,10 @@ input_main:
 .dw	editor_down_page;
 .db	$7D ; page up
 .dw	editor_up_page;
+.db	$71 ; delete
+.dw	editor_delete_after
+.db	$66 ; backspace
+.dw	editor_delete_before
 .db	0
 
 input_menu:
