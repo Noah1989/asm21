@@ -24,12 +24,14 @@ loop:
 	CP	end_
 	JR	Z, end
 	LD	(active_line_pointer), HL
-	LD	DE, (line_active)
-	INC	DE
-	LD	(line_active), DE
-	LD	DE, (listing_bottom_pointer)
+	LD	HL, (line_active)
+	INC	HL
+	LD	(line_active), HL
+	LD	DE, (line_listing_top)
 	AND	A
 	SBC	HL, DE
+	LD	A, L
+	CP	27
 	JR	C, end
 	;	scroll down
 	LD	HL, (listing_top_pointer)
@@ -201,13 +203,39 @@ skip2:
 
 entrypoint editor_insert_after
 .block
-	RET
-.endblock
-
-entrypoint editor_insert_before
-.block
-
-	RET
+	LD	HL, (active_line_pointer)
+retry:
+	INC	HL
+	LD	A, (HL)
+	AND	A
+	JR	Z, retry
+	CP	inlines
+	JR	NC, retry
+	CALL	insert
+	JP	editor_down
+@editor_insert_before:
+	LD	HL, (active_line_pointer)
+	CALL	insert
+	JP	print_source
+insert:
+	LD	C, empty
+loop:
+	LD	A, (HL)
+	LD	(HL), C
+	INC	HL
+	AND	A
+	JR	Z, done
+	CP	end_
+	JR	Z, end
+	LD	C, A
+	JR	loop
+end:
+	LD	(HL), A
+done:
+	LD	HL, (line_count)
+	INC	HL
+	LD	(line_count), HL
+	JP	calc_scrollbar
 .endblock
 
 entrypoint print_source
@@ -280,7 +308,6 @@ scrollbar_ok:
 	LD	A, D
 	CP	29
 	JR	C, next_line
-	LD	(listing_bottom_pointer), HL
 	RET
 .endblock
 
