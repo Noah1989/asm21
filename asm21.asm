@@ -92,6 +92,8 @@ loop:
 loop2:
 	INC	HL
 	LD	A, (HL)
+	AND	A
+	JR	Z, loop2
 	CP	inlines
 	JR	NC, loop2
 	JR	loop

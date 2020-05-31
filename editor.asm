@@ -47,7 +47,7 @@ loop2:
 end:
 	DJNZ	go
 	CALL	calc_scrollbar
-	JR	print_source
+	JP	print_source
 .endblock
 
 entrypoint editor_up
@@ -57,12 +57,11 @@ entrypoint editor_up
 @editor_up_page:
 	LD	B, scroll_lines
 go:
+	LD	HL, (line_active)
+	LD	A, H
+	OR	L
+	JR	Z, end2
 	LD	HL, (active_line_pointer)
-	LD	DE, source_buffer
-	AND	A ; clear carry
-	SBC	HL, DE
-	JR	Z, end
-	ADD	HL, DE
 loop:
 	DEC	HL
 	LD	A, (HL)
@@ -78,7 +77,7 @@ loop:
 	AND	A
 	SBC	HL, DE
 	JR	NC, end
-	;	scroll up
+scroll_up:
 	LD	HL, (listing_top_pointer)
 loop2:
 	DEC	HL
@@ -93,8 +92,12 @@ loop2:
 	LD	(line_listing_top), DE
 end:
 	DJNZ	go
+end2:
 	CALL	calc_scrollbar
-	JR	print_source
+	JP	print_source
+@editor_scroll_up:
+	LD	B, 1
+	JR	scroll_up
 .endblock
 
 entrypoint editor_delete_after
@@ -111,22 +114,64 @@ loop2:
 	CP	inlines
 	JR	NC, loop
 	LD	(active_line_pointer), HL
-	JR	print_source
-.endblock
-
-entrypoint editor_delete_before
-.block
+check:
+	LD	HL, (line_count)
+	DEC	HL
+	LD	(line_count), HL
+	LD	A, H
+	AND	A
+	JR	NZ, go
+	LD	A, L
+	CP	27
+	JR	C, skip
+go:
+	LD	DE, (line_listing_top)
+	XOR	A ; clears carry
+	SBC	HL, DE
+	CP	H
+	JR	NZ, skip
+	LD	A, L
+	CP	27
+	JR	C, editor_scroll_up
+skip:
+	CALL	calc_scrollbar
+	JP	print_source
+@editor_delete_before:
+	LD	HL, (line_active)
+	LD	A, H
+	OR	L
+	RET	Z
 	LD	HL, (active_line_pointer)
 	LD	B, 0
-loop:
+loop3:
 	DEC	HL
 	LD	A, (HL)
 	AND	A
-	JR	Z, loop
+	JR	Z, loop3
 	LD	(HL), B
 	CP	inlines
-	JR	NC, loop
-	JR	print_source
+	JR	NC, loop3
+	LD	HL, (line_listing_top)
+	LD	DE, (line_active)
+	AND	A ; clear carry
+	SBC	HL, DE
+	DEC	DE ; no effect on on flags
+	JR	NZ, skip2
+	LD	(line_listing_top), DE
+skip2:
+	LD	(line_active), DE
+	JR	check
+.endblock
+
+entrypoint editor_insert_after
+.block
+	RET
+.endblock
+
+entrypoint editor_insert_before
+.block
+
+	RET
 .endblock
 
 entrypoint print_source

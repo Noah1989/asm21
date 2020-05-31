@@ -15,6 +15,10 @@ input_main:
 .dw	editor_delete_after
 .db	$66 ; backspace
 .dw	editor_delete_before
+.db	$5A ; enter
+.dw	editor_insert_after
+.db	$70 ; insert
+.dw	editor_insert_before
 .db	0
 
 input_menu:
