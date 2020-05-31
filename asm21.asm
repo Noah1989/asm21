@@ -56,6 +56,13 @@ entrypoint init
 	LD	(hint_pointer), HL
 
 	LD	HL, source_buffer
+	XOR	A
+loop1:
+	CP	(HL)
+	JR	NZ, done
+	INC	HL
+	JR	loop1
+done:
 	LD	(listing_top_pointer), HL
 	LD	(active_line_pointer), HL
 
@@ -72,10 +79,10 @@ entrypoint init
 
 	LD	HL, active_submenu_store
 	LD	B, main_menu_count
-loop:
+loop2:
 	LD	(HL), A
 	INC	HL
-	DJNZ	loop
+	DJNZ	loop2
 
 	RET
 .endblock
@@ -84,7 +91,12 @@ entrypoint count_lines
 .block
 	LD	HL, source_buffer
 	LD	DE, 0
+retry:
 	LD	A, (HL)
+	AND	A
+	JR	NZ, loop
+	INC	HL
+	JR	retry
 loop:
 	CP	end_
 	JR	Z, end

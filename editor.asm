@@ -102,6 +102,17 @@ end2:
 
 entrypoint editor_delete_after
 .block
+	LD	HL, (line_count)
+	DEC	HL
+	LD	A, H
+	OR	L
+	JR	NZ, start
+	LD	HL, (active_line_pointer)
+	LD	(HL), empty
+	INC	HL
+	LD	(HL), end_
+	JP	print_source
+start:
 	LD	HL, (active_line_pointer)
 	LD	B, 0
 loop:
@@ -115,6 +126,31 @@ loop2:
 	JR	NC, loop
 	LD	(active_line_pointer), HL
 check:
+	XOR	A
+	LD	HL, (listing_top_pointer)
+loop4:
+	CP	(HL)
+	JR	NZ, ok
+	INC	HL
+	JR	loop4
+ok:
+	LD	(listing_top_pointer), HL
+	LD	HL, (active_line_pointer)
+	LD	A, (HL)
+	CP	end_
+	JR	NZ, ok2
+loop5:
+	DEC	HL
+	LD	A, (HL)
+	AND	A
+	JR	Z, loop5
+	CP	inlines
+	JR	NC, loop5
+	LD	(active_line_pointer), HL
+	LD	HL, (line_active)
+	DEC	HL
+	LD	(line_active), HL
+ok2:
 	LD	HL, (line_count)
 	DEC	HL
 	LD	(line_count), HL
