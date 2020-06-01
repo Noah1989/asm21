@@ -65,6 +65,29 @@ skip:
 	RET
 .endblock
 
+entrypoint group_select
+.block
+	LD	B, A
+	LD	A, C
+	AND	A
+	RET	Z
+	CP	14
+	RET	NC
+	INC	A
+	OUT	gaddr_h, A
+	LD	A, 1
+	OUT	gaddr_l, A
+	LD	A, color_tool_key_active
+	OUT	color_io, A
+loop:
+	CALL	ROM_GET_KEY
+	JR	NZ, loop ; waiting for keyup
+	CP	B
+	JR	NZ, loop
+	CALL	print_groups
+	RET
+.endblock
+
 entrypoint list_instr_B_to_C
 .block
 	LD E, 7

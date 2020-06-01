@@ -52,6 +52,9 @@ entrypoint init
 	LD	HL, input_main
 	LD	(input_table_pointer), HL
 
+	LD	HL, group_select
+	LD	(input_az_pointer), HL
+
 	LD	HL, global_hints
 	LD	(hint_pointer), HL
 
@@ -142,6 +145,8 @@ debug_align $1000
 .align $1000
 ;variables
 input_table_pointer:
+defs 2
+input_az_pointer:
 defs 2
 is_running:
 defs 1

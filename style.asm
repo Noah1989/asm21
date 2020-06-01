@@ -12,6 +12,7 @@ color_editor_left          equ $17
 color_editor_title         equ $1F
 color_editor_scrollbar     equ $78
 color_tool_key             equ $1F
+color_tool_key_active      equ $1E
 color_tool_text            equ $17
 color_tool_hint            equ $19
 color_tool_hint_highlight  equ $91
