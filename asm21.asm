@@ -55,6 +55,9 @@ entrypoint init
 	LD	HL, global_hints
 	LD	(hint_pointer), HL
 
+	LD	HL, tool_title_select
+	LD	(tool_title_pointer), HL
+
 	LD	HL, source_buffer
 	XOR	A
 loop1:
@@ -167,6 +170,8 @@ scrollbar_top:
 defs 1
 scrollbar_bottom:
 defs 1
+tool_title_pointer:
+defs 2
 expression_buffer:
 defs 8
 

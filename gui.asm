@@ -9,7 +9,9 @@ program_name:
 .db	" ASM&2&1 ", 0
 
 editor_title:
-.db	"Editor", 0
+.db	8, "Assembly", 0
+tool_title_select:
+.db	5, "Input", 0
 
 entrypoint gui_menubar
 .block
@@ -79,6 +81,8 @@ found:
 	LD	C, color_menu_dropdown
 	LD	B, D
 	LD	HL, chars_menu_dropdown_top
+	INC	B
+	INC	B
 	CALL	gui_line_color_C_chars_iHL_len_B
 	POP	HL
 	POP	BC
@@ -129,6 +133,8 @@ skip:
 	LD	C, color_menu_dropdown
 	LD	B, D
 	LD	HL, chars_menu_dropdown_bottom
+	INC	B
+	INC	B
 	CALL	gui_line_color_C_chars_iHL_len_B
 	POP	BC
 	LD	A, color_menu_dropdown_shadow
@@ -154,24 +160,50 @@ loop3:
 	RET
 .endblock
 
+entrypoint gui_topbar_width_A_title_iHL_style_iDE
+.block
+	SUB	(HL)
+	SRL	A
+	PUSH	AF
+	ADC	A, 0
+	LD	B, A
+	EX	DE, HL
+	LD	C, color_editor_top
+	CALL	gui_line_color_C_chars_iHL_len_B
+	EX	DE, HL
+	LD	C, color_editor_title
+	LD	B, (HL)
+	INC	HL
+	CALL	gui_print_highlight_str_iHL_maxlen_B_colors_C_D
+	POP	AF
+	LD	B, A
+	EX	DE, HL
+	LD	C, color_editor_top
+	JP	gui_line_color_C_chars_iHL_len_B
+.endblock
+
 entrypoint gui_editor_top
+.block
+	LD	A, 80-editor_width-2
+	OUT	gaddr_l, A
+	LD	A, 1
+	OUT	gaddr_h, A
+	LD	A, editor_width+2
+	LD	DE, chars_editor_top
+	LD	HL, editor_title
+	JP	gui_topbar_width_A_title_iHL_style_iDE
+.endblock
+
+entrypoint gui_tools_top
 .block
 	XOR	A
 	OUT	gaddr_l, A
 	INC	A
 	OUT	gaddr_h, A
-	LD	HL, chars_editor_top
-	LD	C, color_editor_top
-	LD	B, 35
-	CALL	gui_line_color_C_chars_iHL_len_B
-	LD	HL, editor_title
-	LD	C, color_editor_title
-	LD	B, 6
-	CALL	gui_print_highlight_str_iHL_maxlen_B_colors_C_D
-	LD	HL, chars_editor_top+3
-	LD	C, color_editor_top
-	LD	B, 35
-	JP	gui_line_color_C_chars_iHL_len_B
+	LD	A, 80-editor_width-2
+	LD	DE, chars_tools_top
+	LD	HL, (tool_title_pointer)
+	JP	gui_topbar_width_A_title_iHL_style_iDE
 .endblock
 
 entrypoint gui_statusbar
@@ -217,21 +249,26 @@ loop:
 	RET
 .endblock
 
-entrypoint gui_line_color_C_chars_iHL
+entrypoint gui_line_color_C_chars_iHL_len_B
 .block
-	LD	B, 78
-@gui_line_color_C_chars_iHL_len_B:
 	LD	A, C
 	OUT	color_io, A
 	LD	A, (HL)
 	OUT	chars_io, A
 	INC	HL
+	DJNZ	skip
+	RET
+skip:
+	DJNZ	loop
+	INC	HL
+	JR	end
 loop:
 	LD	A, C
 	OUT	color_io, A
 	LD	A, (HL)
 	OUT	chars_io, A
 	DJNZ	loop
+end:
 	INC	HL
 	LD	A, C
 	OUT	color_io, A

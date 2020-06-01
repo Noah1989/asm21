@@ -1,25 +1,12 @@
 main_menu:
 .db	" &File ", 0
 .dw	file_menu
-.db	" &Testxy1 ", 0
-.dw	test_menu
-.db	" T&est2 ", 0
-.dw	test_menu
-.db	" T&st3 ", 0
-.dw	test_menu
 .db	0
-main_menu_count equ 4
+main_menu_count equ 1
 
 file_menu:
 .db	6
 .db	" &Quit ", 0
-.db	0
-
-test_menu:
-.db	9
-.db	" &This is ", 0
-.db	" &Just a ", 0
-.db	" T&est ", 0
 .db	0
 
 entrypoint menu_activate

@@ -19,8 +19,10 @@ color_statusbar_info2      equ $31
 instruction_indent equ 2
 instruction_align  equ 8
 
+chars_tools_top:
+.db	$D5, $CD, $20, $CD, $CD
 chars_editor_top:
-.db	$D5, $CD, $20, $20, $CD, $B8
+.db	$D1, $CD, $20, $CD, $B8
 chars_menu_dropdown_top:
 .db	$DA, $C4, $BF
 chars_menu_dropdown_frame:

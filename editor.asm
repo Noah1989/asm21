@@ -1,7 +1,9 @@
 scroll_lines equ 26
+editor_width equ 58
 
 entrypoint editor_redraw
 .block
+	CALL	gui_tools_top
 	CALL	gui_editor_top
 	JP	print_source
 .endblock
@@ -193,6 +195,7 @@ loop3:
 	LD	DE, (line_active)
 	AND	A ; clear carry
 	SBC	HL, DE
+	LD	HL, (line_count)
 	DEC	DE ; no effect on on flags
 	JR	NZ, skip2
 	LD	(line_listing_top), DE
@@ -262,7 +265,7 @@ next_line:
 not_active:
 	POP	HL
 	POP	DE
-	XOR	A
+	LD	A, 80-editor_width-2
 	OUT	gaddr_l, A
 	LD	A, D
 	OUT	gaddr_h, A
@@ -276,7 +279,8 @@ not_active:
 	JR	Z, skip
 	CALL	print_source_HL_return_count_C_trash_A_B_DE
 skip:
-	CALL	fill_right_78_txtlen_C_trash_A_BC_DE
+	LD	A, editor_width
+	CALL	fill_right_width_A_txtlen_C_trash_A_BC_DE
 	POP	DE
 	;	scrollbar
 	PUSH	HL

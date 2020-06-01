@@ -452,9 +452,8 @@ next_char:
 	RET
 .endblock
 
-entrypoint fill_right_78_txtlen_C_trash_A_BC_DE
+entrypoint fill_right_width_A_txtlen_C_trash_A_BC_DE
 .block
-	LD	A, 78
 	SUB	C
 	LD	C, B
 	LD	B, A
