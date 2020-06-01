@@ -1,10 +1,11 @@
 scroll_lines equ 26
-editor_width equ 58
+editor_width equ 54
 
 entrypoint editor_redraw
 .block
 	CALL	gui_tools_top
 	CALL	gui_editor_top
+	CALL	tools_redraw
 	JP	print_source
 .endblock
 

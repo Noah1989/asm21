@@ -1,23 +1,67 @@
-entrypoint menu_groups
+entrypoint print_groups
 .block
-	LD E, 7
-	LD D, 2
-	LD B, 26
-	LD HL, group_names
+	LD	E, 2
+	LD	B, 26
+	LD	HL, group_names
+	LD	A, (colors_editor+7)
+	LD	C, A
 next_line:
-	LD A, E
-	OUT gaddr_l, A
-	LD A, D
-	OUT gaddr_h, A
-	LD C, (HL)
-	XOR A
-	CP C
-	JR Z, emptyline
-	CALL print_pstr_HL_trash_A
+	XOR	A
+	OUT	gaddr_l, A
+	LD	A, E
+	OUT	gaddr_h, A
+	LD	A, color_editor_left
+	OUT	color_io, A
+	LD	A, $B3
+	OUT	(chars_io), A
+	LD	B, 80-editor_width-3
+	LD	A, (HL)
+	AND	A
+	JR	Z, emptyline
+	CP	9
+	JR	Z, hint
+	LD	A, color_tool_key
+	OUT	color_io, A
+	LD	A, E
+	ADD	A, "A"-2
+	OUT	chars_io, A
+	DEC	B
+	LD	A, color_tool_text
+	OUT	color_io, A
+	LD	A, "-"
+	OUT	chars_io, A
+	DEC	B
+	JR	nohint
+hint:
+	INC	HL
+	LD	D, 34-editor_width/2
+hint_loop:
+	LD	A, C
+	OUT	color_io, A
+	LD	A, " "
+	OUT	chars_io, A
+	DEC	B
+	DEC	D
+	JR	NZ, hint_loop
+	LD	D, color_tool_hint_highlight
+nohint:
+	CALL	gui_print_highlight_str_iHL_maxlen_B_colors_C_D
+	INC	HL
 emptyline:
-	;CALL fill_right_30_txtlen_C_trash_A_C
-	INC D
-	DJNZ next_line
+	LD	A, C
+	OUT	color_io, A
+	LD	A, " "
+	OUT	chars_io, A
+	DJNZ	emptyline
+	INC	E
+	LD	A, E
+	CP	19
+	JR	NZ, skip
+	LD	C, color_tool_hint
+	LD	HL, tool_hint_select
+skip:
+	CP	29
+	JR	C, next_line
 	RET
 .endblock
 
@@ -47,6 +91,7 @@ next_line:
 	RET
 .endblock
 
+.align $100
 group_table:
 	.db instr_ld8
 	.db instr_ld16
@@ -67,18 +112,18 @@ group_table_end:
 .error "group_table must not cross 256-byte boudary"
 .endif
 group_names:
-	.pstr "8-bit data move"
-	.pstr "16-bit data move"
-	.pstr "8-bit arithmetic"
-	.pstr "16-bit arithmetic"
-	.pstr "decrement/increment"
-	.pstr "logic"
-	.pstr "single bit operation"
-	.pstr "bit rotation"
-	.pstr "bit shift"
-	.pstr "jump"
-	.pstr "block operations"
-	.pstr "input/output"
-	.pstr "other"
+	.db "8-bit data move", 0
+	.db "16-bit data move", 0
+	.db "8-bit arithmetic", 0
+	.db "16-bit arithmetic", 0
+	.db "decrement/increment", 0
+	.db "logic", 0
+	.db "single bit operation", 0
+	.db "bit rotation", 0
+	.db "bit shift", 0
+	.db "jump", 0
+	.db "block operations", 0
+	.db "input/output", 0
+	.db "other", 0
 	.db 0
 group_count equ group_table_end-group_table+1

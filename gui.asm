@@ -11,7 +11,14 @@ program_name:
 editor_title:
 .db	8, "Assembly", 0
 tool_title_select:
-.db	5, "Input", 0
+.db	11, "Instruction", 0
+tool_hint_select:
+.db	9, "use  keys", 0
+.db	9, "  ", $DC, $DC, $DC, $DC, $DC, 0
+.db	9, "  ", $DB, "&A&-&Z", $DB, 0
+.db	9, "  ", $DF, $DF, $DF, $DF, $DF, 0
+.db	9, "to select", 0
+.db	0
 
 entrypoint gui_menubar
 .block
@@ -23,8 +30,12 @@ entrypoint gui_menubar
 	LD	HL, main_menu
 loop:
 	LD	C, color_menubar
-	LD	D, color_menubar_highlight
+	LD	D,C
 	LD	A, (active_menu_entry)
+	CP	-1
+	JR	Z, nohighlight
+	LD	D, color_menubar_highlight
+nohighlight:
 	CP	E
 	JR	NZ, skip
 	LD	C, color_menubar_active

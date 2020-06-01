@@ -135,6 +135,7 @@ entrypoint quit
 .include gui.asm
 .include menu.asm
 .include editor.asm
+.include tools.asm
 .include clock.asm
 
 debug_align $1000
