@@ -67,7 +67,7 @@ skip:
 
 entrypoint group_select
 .block
-	LD	B, A
+	LD	E, A
 	LD	A, C
 	AND	A
 	RET	Z
@@ -78,12 +78,21 @@ entrypoint group_select
 	LD	A, 1
 	OUT	gaddr_l, A
 	LD	A, color_tool_key_active
-	OUT	color_io, A
-loop:
+	OUT	color_inc, A
+	AND	$F0
+	LD	D, A
+	LD	B, 80-editor_width-4
+loop1:
+	IN	A, color_io
+	AND	$0F
+	OR	D
+	OUT	color_inc, A
+	DJNZ	loop1
+wait:
 	CALL	ROM_GET_KEY
-	JR	NZ, loop ; waiting for keyup
-	CP	B
-	JR	NZ, loop
+	JR	NZ, wait ; waiting for keyup
+	CP	E
+	JR	NZ, wait
 	CALL	print_groups
 	RET
 .endblock
