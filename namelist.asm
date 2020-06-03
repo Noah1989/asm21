@@ -155,7 +155,7 @@ entry EX_AF,     "EX", {AF_reg, AF_alt}
 entry EX_DE_HL,    "", {DE_reg, HL_reg}
 entry EX_iSP_HL,   "", {SP_ind, HL_reg}
 entry EX_iSP_ri,   "", {SP_ind, ri_choice}
-entry EXX_,     "EXX", {BC_reg, DE_reg, HL_reg, BC_alt, DE_alt, HL_alt}
+entry EXX_,     "EXX", {BCDEHL_reg, BCDEHL_alt}
 
 instr_arith8 equ last+1
 entry ADD_A_n,  "ADD", {A_reg, n_const}
@@ -341,17 +341,17 @@ entry R_reg, "R", {} ;(000)
 ; The order is chosen in such a way that the machine code encoding
 ; can be calculated by subtracting 16bit_regs and taking the last two bits.
 regs_16 equ last+1
-entry BC_reg, "BC",  {} ; 00
-entry DE_reg, "DE",  {} ; 01
-entry HL_reg, "HL",  {} ; 10
-entry SP_reg, "SP",  {} ; 11
-entry BC_alt, "BC'", {} ;(00)
-entry DE_alt, "DE'", {} ;(01)
-entry IX_reg, "IX",  {} ; 10
-entry AF_reg, "AF",  {} ; 11
-entry AF_alt, "AF'", {} ;(00)
-entry HL_alt, "HL'", {} ;(01)
-entry IY_reg, "IY",  {} ; 10
+entry BC_reg,           "BC",  {} ; 00
+entry DE_reg,           "DE",  {} ; 01
+entry HL_reg,           "HL",  {} ; 10
+entry SP_reg,           "SP",  {} ; 11
+entry BCDEHL_reg,   "BCDEHL",  {} ;(00)
+entry BCDEHL_alt, "BC'DE'HL'", {} ;(01)
+entry IX_reg,           "IX",  {} ; 10
+entry AF_reg,           "AF",  {} ; 11
+entry AF_alt,           "AF'", {} ;(00)
+entry unused,              "", {} ;(01)
+entry IY_reg,           "IY",  {} ; 10
 
 ; Indirect memory access:
 entry BC_ind, "(BC)", {}

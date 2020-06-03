@@ -93,37 +93,53 @@ wait:
 	JR	NZ, wait ; waiting for keyup
 	CP	E
 	JR	NZ, wait
-	CALL	print_groups
-	RET
+	LD	HL, group_table
+	LD	B, 0
+	ADD	HL, BC
+	LD	E, (HL)
+	DEC	HL
+	LD	D, (HL)
+	JP	list_instr_D_to_E
 .endblock
 
-entrypoint list_instr_B_to_C
+entrypoint list_instr_D_to_E
 .block
-	LD E, 7
-	LD D, 2
+	LD	L, 2
 next_line:
-	LD A, D
-	CP 2 + 26
-	RET Z
-	OUT gaddr_h, A
-	LD A, E
-	OUT gaddr_l, A
-	LD A, B
-	CP C
-	PUSH BC
-	PUSH DE
-	LD C, 0
-	CALL C, print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
-	;CALL fill_right_30_txtlen_C_trash_A_C
-	POP DE
-	POP BC
-	INC B
-	INC D
+	LD	A, L
+	CP	29
+	RET	NC
+	OUT	gaddr_h, A
+	LD	A, 1
+	OUT	gaddr_l, A
+	LD	C, 0
+	LD	A, D
+	CP	E
+	PUSH	DE
+	LD	A, 80-editor_width-3
+	JR	NC, emptyline
+	LD	A, color_tool_key
+	OUT	color_io, A
+	LD	A, 'A'-2
+	ADD	A, L
+	OUT	chars_io, A
+	LD	A, color_tool_text
+	OUT	color_io, A
+	LD	A, '-'
+	OUT	chars_io, A
+	LD	A, D
+	PUSH	HL
+	CALL	print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
+	POP	HL
+	LD	A, 80-editor_width-5
+emptyline:
+	CALL	fill_right_width_A_txtlen_C_trash_A_BC_DE
+	POP	DE
+	INC	L
+	INC	D
 	JR next_line
-	RET
 .endblock
 
-.align $100
 group_table:
 	.db instr_ld8
 	.db instr_ld16
@@ -140,9 +156,7 @@ group_table:
 group_table_end:
 	.db instr_misc
 	.db pseudo_instructions
-.if msb(group_table) != msb(group_table_end)
-.error "group_table must not cross 256-byte boudary"
-.endif
+
 group_names:
 	.db "8-bit data move", 0
 	.db "16-bit data move", 0

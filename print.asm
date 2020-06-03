@@ -455,6 +455,7 @@ next_char:
 entrypoint fill_right_width_A_txtlen_C_trash_A_BC_DE
 .block
 	SUB	C
+	RET	Z
 	LD	C, B
 	LD	B, A
 	LD	DE, (code_colors_pointer)
