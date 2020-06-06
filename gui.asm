@@ -19,6 +19,8 @@ tool_hint_select:
 .db	9, "  ", $DF, $DF, $DF, $DF, $DF, 0
 .db	9, "to select", 0
 .db	0
+tool_hint_back:
+.db	"    ", $DE, "&E&S&C", $DD, $1A, " go back", 0
 
 entrypoint gui_menubar
 .block

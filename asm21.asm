@@ -178,6 +178,10 @@ scrollbar_bottom:
 defs 1
 tool_title_pointer:
 defs 2
+instruction_select_begin:
+defs 1
+instruction_select_end:
+defs 1
 expression_buffer:
 defs 8
 

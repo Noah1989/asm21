@@ -67,6 +67,7 @@ skip:
 
 entrypoint group_select
 .block
+	; A: keycode, C: Letter (0=ESC)
 	LD	E, A
 	LD	A, C
 	AND	A
@@ -96,49 +97,79 @@ wait:
 	LD	HL, group_table
 	LD	B, 0
 	ADD	HL, BC
-	LD	E, (HL)
+	LD	A, (HL)
+	LD	(instruction_select_end), A
 	DEC	HL
-	LD	D, (HL)
-	JP	list_instr_D_to_E
-.endblock
-
-entrypoint list_instr_D_to_E
-.block
-	LD	L, 2
+	LD	A, (HL)
+	LD	(instruction_select_begin), A
+	LD	D, A
+	LD	HL, instruction_select
+	LD	(input_az_pointer), HL
+	LD	E, 2
 next_line:
-	LD	A, L
+	PUSH	DE
+	LD	A, E
 	CP	29
 	RET	NC
 	OUT	gaddr_h, A
 	LD	A, 1
 	OUT	gaddr_l, A
+	LD	A, E
+	CP	26
+	JR	Z, hint
 	LD	C, 0
 	LD	A, D
-	CP	E
-	PUSH	DE
+	LD	HL, instruction_select_end
+	CP	(HL)
 	LD	A, 80-editor_width-3
 	JR	NC, emptyline
 	LD	A, color_tool_key
 	OUT	color_io, A
 	LD	A, 'A'-2
-	ADD	A, L
+	ADD	A, E
 	OUT	chars_io, A
 	LD	A, color_tool_text
 	OUT	color_io, A
 	LD	A, '-'
 	OUT	chars_io, A
 	LD	A, D
-	PUSH	HL
 	CALL	print_name_and_params_A_ret_len_C_trash_DE_HL_zero_B
-	POP	HL
 	LD	A, 80-editor_width-5
 emptyline:
 	CALL	fill_right_width_A_txtlen_C_trash_A_BC_DE
+resume:
 	POP	DE
-	INC	L
+	INC	E
 	INC	D
 	JR next_line
+hint:
+	LD	C, color_tool_hint
+	LD	D, color_tool_hint_highlight
+	LD	B, 80-editor_width-3
+	LD	HL, tool_hint_back
+	CALL	gui_print_highlight_str_iHL_maxlen_B_colors_C_D
+hint_fill2:
+	LD	A, C
+	OUT	color_io, A
+	LD	A, " "
+	OUT	chars_io, A
+	DJNZ	hint_fill2
+	JR	resume
 .endblock
+
+
+entrypoint instruction_select
+.block
+	; A: keycode, C: Letter (0=ESC)
+	CP	$76
+	JR	Z, quit
+	RET
+quit:
+	LD	HL, group_select
+	LD	(input_az_pointer), HL
+	JP	print_groups
+.endblock
+
 
 group_table:
 	.db instr_ld8
