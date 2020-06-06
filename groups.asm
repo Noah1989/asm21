@@ -107,10 +107,10 @@ wait:
 	LD	(input_az_pointer), HL
 	LD	E, 2
 next_line:
-	PUSH	DE
 	LD	A, E
 	CP	29
 	RET	NC
+	PUSH	DE
 	OUT	gaddr_h, A
 	LD	A, 1
 	OUT	gaddr_l, A
@@ -162,9 +162,9 @@ entrypoint instruction_select
 .block
 	; A: keycode, C: Letter (0=ESC)
 	CP	$76
-	JR	Z, quit
+	JR	Z, back
 	RET
-quit:
+back:
 	LD	HL, group_select
 	LD	(input_az_pointer), HL
 	JP	print_groups
