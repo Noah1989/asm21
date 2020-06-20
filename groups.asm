@@ -1,5 +1,8 @@
 entrypoint print_groups
 .block
+	LD	A, (instruction_select_begin)
+	AND	A
+	JP	NZ, print_instructions
 	LD	E, 2
 	LD	B, 26
 	LD	HL, group_names
@@ -13,7 +16,7 @@ next_line:
 	LD	A, color_editor_left
 	OUT	color_io, A
 	LD	A, $B3
-	OUT	(chars_io), A
+	OUT	chars_io, A
 	LD	B, 80-editor_width-3
 	LD	A, (HL)
 	AND	A
@@ -102,6 +105,7 @@ wait:
 	DEC	HL
 	LD	A, (HL)
 	LD	(instruction_select_begin), A
+@print_instructions:
 	LD	D, A
 	LD	HL, instruction_select
 	LD	(input_az_pointer), HL
@@ -112,8 +116,12 @@ next_line:
 	RET	NC
 	PUSH	DE
 	OUT	gaddr_h, A
-	LD	A, 1
+	XOR	A
 	OUT	gaddr_l, A
+	LD	A, color_tool_text
+	OUT	color_io, A
+	LD	A, $B3
+	OUT	chars_io, A
 	LD	A, E
 	CP	26
 	JR	Z, hint
@@ -167,6 +175,8 @@ entrypoint instruction_select
 back:
 	LD	HL, group_select
 	LD	(input_az_pointer), HL
+	XOR	A
+	LD	(instruction_select_begin), A
 	JP	print_groups
 .endblock
 

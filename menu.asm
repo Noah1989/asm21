@@ -13,6 +13,10 @@ entrypoint menu_activate
 .block
 	LD	HL, input_menu
 	LD	(input_table_pointer), HL
+	LD	HL, (input_az_pointer)
+	LD	(menu_az_save), HL
+	LD	HL, menu_az
+	LD	(input_az_pointer), HL
 	LD	HL, menu_hints
 	LD	(hint_pointer), HL
 	CALL	gui_statusbar
@@ -26,6 +30,11 @@ entrypoint menu_activate
 	JP	gui_menu_dropdown
 .endblock
 
+entrypoint menu_az
+.block
+	RET
+.endblock
+
 entrypoint menu_abort
 .block
 	LD	HL, input_main
@@ -37,6 +46,8 @@ entrypoint menu_abort
 	CPL
 	LD	(active_menu_entry), A
 	CALL	gui_menubar
+	LD	HL, (menu_az_save)
+	LD	(input_az_pointer), HL
 	JP	editor_redraw
 .endblock
 

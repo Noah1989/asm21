@@ -76,6 +76,9 @@ done:
 	LD	(line_listing_top), HL
 	LD	(line_active), HL
 
+	LD	A, 0
+	LD	(instruction_select_begin), A
+
 	LD	A, 1
 	LD	(is_running), A
 
@@ -158,6 +161,8 @@ active_submenu_store:
 defs main_menu_count
 submenu_count:
 defs 1
+menu_az_save:
+defs 2
 hint_pointer:
 defs 2
 listing_top_pointer:
