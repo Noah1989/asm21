@@ -171,6 +171,34 @@ entrypoint instruction_select
 	; A: keycode, C: Letter (0=ESC)
 	CP	$76
 	JR	Z, back
+	LD	E, A
+	LD	A, (instruction_select_begin)
+	ADD	A, C
+	LD	HL, instruction_select_end
+	DEC	A
+	CP	(HL)
+	RET	NC
+	LD	A, 1
+	OUT	gaddr_l, A
+	ADD	A, C
+	OUT	gaddr_h, A
+	LD	A, color_tool_key_active
+	OUT	color_inc, A
+	AND	$F0
+	LD	D, A
+	LD	B, 80-editor_width-4
+loop1:
+	IN	A, color_io
+	AND	$0F
+	OR	D
+	OUT	color_inc, A
+	DJNZ	loop1
+wait:
+	CALL	ROM_GET_KEY
+	JR	NZ, wait ; waiting for keyup
+	CP	E
+	JR	NZ, wait
+	call tools_redraw
 	RET
 back:
 	LD	HL, group_select
