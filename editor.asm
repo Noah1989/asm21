@@ -313,6 +313,8 @@ scrollbar_ok:
 	LD	A, D
 	CP	29
 	JR	C, next_line
+	LD	DE, colors_editor
+	LD	(code_colors_pointer), DE
 	RET
 .endblock
 

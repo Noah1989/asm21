@@ -105,10 +105,10 @@ wait:
 	DEC	HL
 	LD	A, (HL)
 	LD	(instruction_select_begin), A
-@print_instructions:
-	LD	D, A
 	LD	HL, instruction_select
 	LD	(input_az_pointer), HL
+@print_instructions:
+	LD	D, A
 	LD	E, 2
 next_line:
 	LD	A, E
