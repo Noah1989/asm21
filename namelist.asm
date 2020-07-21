@@ -304,9 +304,9 @@ entry SCF_,     "SCF", {}
 entry CCF_,     "CCF", {}
 entry DI_,       "DI", {}
 entry EI_,       "EI", {}
-entry IM_0,      "IM", {dat_0}
-entry IM_1,        "", {dat_1}
-entry IM_2,        "", {dat_2}
+entry IM_0,     "IM0", {}
+entry IM_1,     "IM1", {}
+entry IM_2,     "IM2", {}
 
 last_instruction equ last
 
@@ -350,7 +350,7 @@ entry BCDEHL_alt, "BC'DE'HL'", {} ;(01)
 entry IX_reg,           "IX",  {} ; 10
 entry AF_reg,           "AF",  {} ; 11
 entry AF_alt,           "AF'", {} ;(00)
-entry unused,              "", {} ;(01)
+entry unknown,           "?",  {} ;(01)
 entry IY_reg,           "IY",  {} ; 10
 
 ; Indirect memory access:

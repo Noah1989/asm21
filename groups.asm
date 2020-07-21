@@ -198,8 +198,21 @@ wait:
 	JR	NZ, wait ; waiting for keyup
 	CP	E
 	JR	NZ, wait
-	call tools_redraw
-	RET
+	LD	A, (instruction_select_begin)
+	ADD	A, C
+	DEC	A
+	LD	HL, (active_line_pointer)
+	LD	(HL), A
+erase_loop:
+	INC	HL
+	LD	A, (HL)
+	CP	inlines
+	JR	C, erase_done
+	XOR	A
+	LD	(HL), A
+	JR	erase_loop
+erase_done:
+	JP	editor_redraw
 back:
 	LD	HL, group_select
 	LD	(input_az_pointer), HL
