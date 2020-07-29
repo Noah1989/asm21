@@ -212,7 +212,47 @@ erase_loop:
 	LD	(HL), A
 	JR	erase_loop
 erase_done:
+	LD	HL, (active_line_pointer)
+	LD	A, (HL)
+	CALL	find_descr_A_ret_name_C_DE_params_B_HL
+	INC	B
+	DEC	B
+	JR	Z, noparams
+	LD	DE, (active_line_pointer)
+	INC	DE
+params_loop:
+	LD	A, (HL)
+	INC	HL
+	CP	placeholders
+	JR	C, noplaceholder
+	LD	A, (DE)
+	AND	A
+	CALL	NZ, insert
+	LD	A, unknown
+	LD	(DE), A
+	INC	DE
+noplaceholder:
+	DJNZ	params_loop
+noparams:
 	JP	editor_redraw
+insert:
+	PUSH	HL
+	LD	HL, DE
+	XOR	A
+insert_loop:
+	LD	C, A
+	LD	A, (HL)
+	LD	(HL), C
+	INC	HL
+	AND	A
+	JR	Z, insert_done
+	CP	end_
+	JR	NZ, insert_loop
+insert_end:
+	LD	(HL), A
+insert_done:
+	POP	HL
+	RET
 back:
 	LD	HL, group_select
 	LD	(input_az_pointer), HL

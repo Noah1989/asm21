@@ -287,7 +287,7 @@ switch:
 	JR	NC, switch_1
 	;	not placeholder, just print the name
 	PUSH	HL
-	;	check if the name itself has a parameter (such as "IX+d")
+	;	check if the name itself has exactly one parameter (such as "IX+d")
 	CALL	find_descr_A_ret_name_C_DE_params_B_HL
 	DJNZ	name_has_no_param
 name_has_param:

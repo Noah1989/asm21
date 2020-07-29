@@ -193,6 +193,8 @@ defs 8
 debug_align $1000
 .align $1000
 source_buffer:
+.db	ld_a_inn, digits, dat_1, dat_2, dat_3, dat_4
+.db	empty
 .db	define, digits, dat_0, dat_0, terminator, dat_6, dat_7, dat_7, dat_3, dat_6, dat_5, dat_7, dat_4, dat_3, dat_2, digits, dat_b, dat_2
 .db	empty
 .db	define, digits, dat_0, dat_1, terminator, dat_6, dat_7, dat_6, dat_1, dat_6, dat_4, dat_6, dat_4, dat_7, dat_2, dat_5, dat_f, dat_6, dat_c, digits, dat_b, dat_3
